@@ -6,7 +6,7 @@ using namespace std;
 
 int main()
 {
-	VideoMode vm(1500, 400);
+	VideoMode vm(1200, 675);
 
 	RenderWindow window(vm, "File Explorer", Style::Close);
 
