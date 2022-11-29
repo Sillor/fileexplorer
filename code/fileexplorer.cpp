@@ -12,7 +12,7 @@ string getNameFromFullPath(string pathParam);
 
 //void populateDirectory(Directory& directoryParam);
 
-filesystem::path getDirectoryPath();
+filesystem::path getPath();
 
 // --------------------------------------------------------------------
 
@@ -21,7 +21,7 @@ filesystem::path getDirectoryPath();
 // classes
 // --------------------------------------------------------------------
 
-// will be virtual
+// The generic parent class of everything: will be pure virtual at some point, though currently it isnt...
 class Item
 {
 	public:
@@ -36,13 +36,15 @@ class Item
 		location = initPath;
 	}
 
-	filesystem::path getDirectoryPath();
-	string Item::getDirectoryPathStr();
-	void printContents();
+	// setter
+	virtual void setIcon() {};		// UNDEFINED FOR NOW, will be used to determine which visual to use to represent the file/folder/sym link/whatever
+	
+	// getter
+	filesystem::path getPath() const;		// returns a filesystem::path object for the thing
+	string Item::getPathStr() const;		// returns a string containing the full path on the filesystem of the thing
 
 	protected:
-		vector<Item*> contents;
-		filesystem::path location;
+		filesystem::path location;			// filesystem::path object for the item
 };
 
 class Directory : public Item
@@ -57,11 +59,43 @@ class Directory : public Item
 			// intentionally blank, can maybe just delete this constructor?
 		}
 
+		// setter
 		void populate();	// collects the things stored in the directory and saves them in the vector variable "location"
 
+		// getter
+		void printContents() const;		// print the names and paths of the things in the directory
+
+		
+
 	protected:
+		vector<Item*> contents;			// contains a list of Item pointers for every item in the directory.
+};
+
+// the generic parent of all actual files, derives from Item..
+class File : public Item
+{	
+	public:
+
+		File()
+		{
+		}
+
+		File(filesystem::path initPath) : Item(initPath)
+		{
+			// intentionally blank, can maybe just delete this constructor?
+		}
+
+		// setter
+		void getFileType();
+	
+	protected:
+		string fileType;
+
+	
 };
 // --------------------------------------------------------------------
+
+
 
 int main()
 {
@@ -71,6 +105,8 @@ int main()
 
 	testDir.populate();
 	testDir.printContents();
+
+	//string temp = getPathStr();
 
 	// The stuff you did is below, im just commenting it out temporarily
 	// -------------------------------
@@ -115,7 +151,7 @@ void Directory::populate()
 	//
 	// The rest of the loop body is adding each thing to the member list
 	// named "contents".
-	for (const filesystem::directory_entry & file : filesystem::directory_iterator(getDirectoryPath()))																												
+	for (const filesystem::directory_entry & file : filesystem::directory_iterator(getPath()))																												
 	{			
 		if (filesystem::is_directory(file.path()))		// translation: is it a folder itself?
 		{
@@ -142,12 +178,12 @@ void Directory::populate()
 	}
 }
 
-filesystem::path Item::getDirectoryPath()
+filesystem::path Item::getPath() const
 {
 	return location;
 }
 
-string Item::getDirectoryPathStr()
+string Item::getPathStr() const
 {
 	string holder = location.string();
 	return holder;
@@ -185,11 +221,18 @@ string getNameFromFullPath(string pathParam)
     return returnVal;
 }
 
-void Item::printContents()
+void Directory::printContents() const
 {
 	for (int index = 0; index < contents.size(); index++)		
 	{	
-		string holder = contents[index]->getDirectoryPathStr();
+		string holder = contents[index]->getPathStr();
 		cout << holder << endl;
 	}
+}
+
+void getFileType()
+{
+	//string pathStr = getPath
+	//system(file )
+
 }
