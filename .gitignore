@@ -37,3 +37,6 @@ x86
 *.exe
 *.out
 *.app
+
+# File explorer file data output file
+system call output.txt

@@ -7,7 +7,14 @@
 using namespace sf;
 using namespace std;
 
-// prototypes
+struct itemInfo
+{
+	string fileType;
+	string location;
+};
+
+
+// PROTOTYPES
 // --------------------------------------------------------------------
 string getNameFromFullPath(string pathParam);
 
@@ -20,8 +27,7 @@ string parseFileData(fstream& fileInfoParam);
 // --------------------------------------------------------------------
 
 
-
-// classes
+// CLASSES
 // --------------------------------------------------------------------
 
 // The generic parent class of everything: will be pure virtual at some point, though currently it isnt...
@@ -46,11 +52,12 @@ class Item
 	
 	// getter
 	filesystem::path getPath() const;		// returns a filesystem::path object for the thing
-	virtual string getPathStr() const;		// returns a string containing the full path on the filesystem of the thing
+	virtual itemInfo getPathStr() const;		// returns a the full path on the filesystem of the thing and the file type
 
 	protected:
 		filesystem::path location;			// filesystem::path object for the item
 		vector<Item*> contents;
+		
 };
 
 class Directory : public Item
@@ -73,7 +80,7 @@ class Directory : public Item
 		void populate();	// collects the things stored in the directory and saves them in the vector variable "location"
 
 		// getter
-		virtual string getPathStr() const;
+		virtual itemInfo getPathStr() const;
 
 		
 
@@ -92,7 +99,7 @@ class File : public Item
 
 		File(filesystem::path initPath) : Item(initPath)
 		{
-			string pathStr = getPathStr();
+			string pathStr = getPathStr().location;
 			string command = "";				// command to pass to system() to get the file type info
 			string quotes = "\"";	
 			command = "file " + quotes + pathStr + quotes + " > \"system call output.txt\"";
@@ -113,7 +120,7 @@ class File : public Item
 													// https://www.daniweb.com/programming/software-development/threads/114299/undefined-reference-to-vtable-for
 
 		// getter
-		virtual string getPathStr() const;
+		virtual itemInfo getPathStr() const;
 		
 	
 	protected:
@@ -215,25 +222,44 @@ filesystem::path Item::getPath() const
 	return location;
 }
 
-string Item::getPathStr() const
+itemInfo Item::getPathStr() const
 {
-	string holder = location.string();
+	itemInfo holder;
+	holder.location = location.string();
+	holder.fileType = "";
 	return holder;
 }
 
-string Directory::getPathStr() const
+itemInfo Directory::getPathStr() const
 {
-	string holder = location.string();
+	itemInfo holder;
+	holder.location = location.string();
+	holder.fileType = "directory";
 	return holder;
 
 }
 
 
-string File::getPathStr() const
+itemInfo File::getPathStr() const
 {
-	string holder = location.string();
+	itemInfo holder;
+	holder.location = location.string();
+	holder.fileType = fileType;
 	return holder;
 
+}
+
+void Directory::printContents() const
+{
+	for (int index = 0; index < contents.size(); index++)		
+	{	
+		//string holder = contents[index]->getPathStr();		
+		//cout << holder << endl;
+		
+		//cout << contents[index]->getPathStr().location << "\t\t" << contents[index]->getPathStr().fileType << endl;
+		cout << contents[index]->getPathStr().fileType << ": " << endl;
+		cout << contents[index]->getPathStr().location << endl << endl;
+	}
 }
 
 
@@ -268,18 +294,6 @@ string getNameFromFullPath(string pathParam)
 
     return returnVal;
 }
-
-void Directory::printContents() const
-{
-	for (int index = 0; index < contents.size(); index++)		
-	{	
-		//string holder = contents[index]->getPathStr();		
-		//cout << holder << endl;
-		
-		cout << contents[index]->getPathStr() << endl;
-	}
-}
-
 
 
 void File::getFileType()
