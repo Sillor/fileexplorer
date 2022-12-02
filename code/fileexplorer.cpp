@@ -17,116 +17,101 @@ struct itemInfo
 // PROTOTYPES
 // --------------------------------------------------------------------
 string getNameFromFullPath(string pathParam);
-
 //void populateDirectory(Directory& directoryParam);
-
 filesystem::path getPath();
-
 string parseFileData(fstream& fileInfoParam);
-
 // --------------------------------------------------------------------
-
 
 // CLASSES
 // --------------------------------------------------------------------
 
-// The generic parent class of everything: will be pure virtual at some point, though currently it isnt...
 class Item
 {
 	public:
+		// constructors/destructor ------
+		Item(filesystem::path initPath) { location = initPath; }
+		~Item() {};
+		// ------------------------------
 
-	// Dont think default constructor needed?
-	//Item()
-	//{
-	//}
-	
-	Item(filesystem::path initPath)
-	{
-		location = initPath;
-	}
+		// setter -----------------------
+		virtual void setIcon() {};								// UNDEFINED FOR NOW, will be used to determine which visual to use to represent the file/folder/sym link/whatever
+		void setIconScreenCoords() {};
+		// ------------------------------
 
-	~Item() {};
+		// getter -----------------------
+		filesystem::path getPath() const;						// returns a filesystem::path object for the thing
+		virtual itemInfo getInfo() /*getPathStr()*/ const;		// returns the full path on the filesystem of the thing and the file type
+		Vector2i getIconScreenCoords() {};
+		// ------------------------------
 
-	// setter
-	virtual void setIcon() {};		// UNDEFINED FOR NOW, will be used to determine which visual to use to represent the file/folder/sym link/whatever
-	
-	// getter
-	filesystem::path getPath() const;		// returns a filesystem::path object for the thing
-	virtual itemInfo getPathStr() const;		// returns a the full path on the filesystem of the thing and the file type
+		// void -------------------------
+		virtual void openItem() = 0;
+		// ------------------------------								
 
 	protected:
-		filesystem::path location;			// filesystem::path object for the item
-		vector<Item*> contents;
-		
+		// attributes -------------------
+		filesystem::path location;								// filesystem::path object for the item
+		//vector<Item*> contents;
+		Texture icon;
+		Vector2i iconScreenCoords;
+		itemInfo info;
+		// ------------------------------
 };
 
 class Directory : public Item
 {
 	public:
-		//Directory()
-		//{
-		//}
-	
-		Directory(filesystem::path initPath) : Item(initPath)
-		{	
-		}
-
+		// constructors/destructor -----------------------------------
+		Directory(filesystem::path initPath) : Item(initPath)  {}
 		~Directory() {};
+		// -----------------------------------------------------------
 
-		// void
-		virtual void printContents() const;		// print the names and paths of the things in the directory
+		// setter ---------------------------
+		void populate();										// collects the things stored in the directory and saves them in the vector variable "location"
+		// ----------------------------------
 
-		// setter
-		void populate();	// collects the things stored in the directory and saves them in the vector variable "location"
+		// getter ---------------------------
+		virtual itemInfo getInfo() /*getPathStr()*/ const;
+		// ----------------------------------
 
-		// getter
-		virtual itemInfo getPathStr() const;
-
-		
+		// void -----------------------------
+		virtual void printContents() const;						// print the names and paths of the things in the directory
+		//void displayContents() const;							// display the directory in the browser
+		virtual void openItem();
+		// ----------------------------------
 
 	protected:
-		//vector<Item*> contents;			// contains a list of Item pointers for every item in the directory.
+		// attributes -----------------------
+		vector<Item*> contents;									// contains a list of Item pointers for every item in the directory.
+		// Vector2i iconScreenCoords
+		// ----------------------------------
 };
 
 // the generic parent of all actual files, derives from Item
 class File : public Item
 {	
 	public:
-
-		//File()
-		//{
-		//}
-
-		File(filesystem::path initPath) : Item(initPath)
-		{
-			string pathStr = getPathStr().location;
-			string command = "";				// command to pass to system() to get the file type info
-			string quotes = "\"";	
-			command = "file " + quotes + pathStr + quotes + " > \"system call output.txt\"";
-			system(command.c_str());
-
-			fstream fileInfo("system call output.txt");
-			if (fileInfo.fail()) { cout << "FILE OPEN FAILURE << endl"; }
-
-			fileType = parseFileData(fileInfo);
-		}
-
+		// constructors/destructor -------------------
+		File(filesystem::path initPath);
 		~File() {};
+		// -------------------------------------------
 
-		// void
+		// void --------------------------------------
 		void getFileType();
-		//virtual void printContents() const;		// note to self: generates weird linker error, but dont need this anyway.
-													// reason explained here: 
-													// https://www.daniweb.com/programming/software-development/threads/114299/undefined-reference-to-vtable-for
+		//virtual void printContents() const;					// note to self: generates weird linker error, but dont need this anyway.
+																// reason explained here: 
+																// https://www.daniweb.com/programming/software-development/threads/114299/undefined-reference-to-vtable-for
+		virtual void openItem();
+		// -------------------------------------------
 
-		// getter
-		virtual itemInfo getPathStr() const;
-		
+		// getter ------------------------------------
+		virtual itemInfo getInfo() const;
+		// -------------------------------------------
 	
 	protected:
+		// attributes --------------------------------
 		string fileType;
-
-	
+		// -------------------------------------------
 };
 // --------------------------------------------------------------------
 
@@ -140,12 +125,6 @@ int main()
 
 	testDir.populate();
 	testDir.printContents();
-
-
-
-
-
-
 
 
 	// The stuff you did is below, im just commenting it out temporarily
@@ -179,6 +158,31 @@ int main()
 // --------------------------------------------------------------------
 
 // collects the things stored in the directory and saves them in the vector member with identifier "location"
+
+File::File(filesystem::path initPath) : Item(initPath)
+		{
+			string pathStr = getInfo().location;
+			string command = "";				// command to pass to system() to get the file type info
+			string quotes = "\"";	
+			command = "file " + quotes + pathStr + quotes + " > \"system call output.txt\"";
+			system(command.c_str());
+
+			fstream fileInfo("system call output.txt");
+			if (fileInfo.fail()) { cout << "FILE OPEN FAILURE << endl"; }
+
+			fileType = parseFileData(fileInfo);
+		}
+
+void Directory::openItem()
+{
+
+}
+
+void File::openItem()
+{
+
+}
+
 void Directory::populate()
 {
 	
@@ -209,6 +213,9 @@ void Directory::populate()
 
 		else	// if its anything other than a directory...
 		{
+			// will need to call functions to detect file type in here as well
+			// so you arent creating a generic File object for each thing every time.
+			// only do that if the file type cannot be determined.
 			Item* tempPtr2 = new File(file.path());
 			contents.push_back(tempPtr2);
 
@@ -222,7 +229,7 @@ filesystem::path Item::getPath() const
 	return location;
 }
 
-itemInfo Item::getPathStr() const
+itemInfo Item::getInfo() const
 {
 	itemInfo holder;
 	holder.location = location.string();
@@ -230,7 +237,7 @@ itemInfo Item::getPathStr() const
 	return holder;
 }
 
-itemInfo Directory::getPathStr() const
+itemInfo Directory::getInfo() const
 {
 	itemInfo holder;
 	holder.location = location.string();
@@ -240,7 +247,7 @@ itemInfo Directory::getPathStr() const
 }
 
 
-itemInfo File::getPathStr() const
+itemInfo File::getInfo() const
 {
 	itemInfo holder;
 	holder.location = location.string();
@@ -257,8 +264,8 @@ void Directory::printContents() const
 		//cout << holder << endl;
 		
 		//cout << contents[index]->getPathStr().location << "\t\t" << contents[index]->getPathStr().fileType << endl;
-		cout << contents[index]->getPathStr().fileType << ": " << endl;
-		cout << contents[index]->getPathStr().location << endl << endl;
+		cout << contents[index]->getInfo().fileType << ": " << endl;
+		cout << contents[index]->getInfo().location << endl << endl;
 	}
 }
 
