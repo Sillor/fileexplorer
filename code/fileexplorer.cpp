@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <vector>
 #include <fstream>
+#include <unistd.h>  
 
 using namespace sf;
 using namespace std;
@@ -11,7 +12,12 @@ struct itemInfo
 {
 	string fileType;
 	string location;
+	Texture icon;
+	Texture* iconPtr;
+	
 };
+
+Color testColor(100.0, 100.0, 100.0);
 
 
 // PROTOTYPES
@@ -24,37 +30,37 @@ string parseFileData(fstream& fileInfoParam);
 
 // CLASSES
 // --------------------------------------------------------------------
-
 class Item
 {
 	public:
 		// constructors/destructor ------
-		Item(filesystem::path initPath) { location = initPath; }
+		Item(filesystem::path initPath) { location = initPath; info.location = initPath; }
 		~Item() {};
 		// ------------------------------
 
 		// setter -----------------------
-		virtual void setIcon() {};								// UNDEFINED FOR NOW, will be used to determine which visual to use to represent the file/folder/sym link/whatever
+		virtual void setIcon(RenderWindow& window) = 0;								// UNDEFINED FOR NOW, will be used to determine which visual to use to represent the file/folder/sym link/whatever
 		void setIconScreenCoords() {};
 		// ------------------------------
 
 		// getter -----------------------
 		filesystem::path getPath() const;						// returns a filesystem::path object for the thing
-		virtual itemInfo getInfo() /*getPathStr()*/ const;		// returns the full path on the filesystem of the thing and the file type
-		Vector2i getIconScreenCoords() {};
+		virtual itemInfo getInfo() const = 0;		// returns the full path on the filesystem of the thing and the file type
+		Vector2i getIconScreenCoords() const {};
 		// ------------------------------
 
 		// void -------------------------
-		virtual void openItem() = 0;
+		virtual void openItem() const = 0;
 		// ------------------------------								
 
 	protected:
 		// attributes -------------------
 		filesystem::path location;								// filesystem::path object for the item
-		//vector<Item*> contents;
 		Texture icon;
 		Vector2i iconScreenCoords;
 		itemInfo info;
+
+		vector<Texture*> textureIcons;	
 		// ------------------------------
 };
 
@@ -68,26 +74,27 @@ class Directory : public Item
 
 		// setter ---------------------------
 		void populate();										// collects the things stored in the directory and saves them in the vector variable "location"
+		virtual void setIcon(RenderWindow& window) override;
 		// ----------------------------------
 
 		// getter ---------------------------
-		virtual itemInfo getInfo() /*getPathStr()*/ const;
+		virtual itemInfo getInfo() const override;
 		// ----------------------------------
 
 		// void -----------------------------
-		virtual void printContents() const;						// print the names and paths of the things in the directory
-		//void displayContents() const;							// display the directory in the browser
-		virtual void openItem();
+		void printContents() const;						// print the names and paths of the things in the directory
+		void displayContents(RenderWindow& windowParam) const;							// display the directory in the browser
+		virtual void openItem() const override;
 		// ----------------------------------
 
 	protected:
 		// attributes -----------------------
-		vector<Item*> contents;									// contains a list of Item pointers for every item in the directory.
+		vector<Item*> contents;								// contains a list of Item pointers for every item in the directory.
 		// Vector2i iconScreenCoords
 		// ----------------------------------
 };
 
-// the generic parent of all actual files, derives from Item
+// the generic parent of all actual files, derives from Item. Called GenericFile in UML diagram
 class File : public Item
 {	
 	public:
@@ -96,16 +103,17 @@ class File : public Item
 		~File() {};
 		// -------------------------------------------
 
-		// void --------------------------------------
-		void getFileType();
-		//virtual void printContents() const;					// note to self: generates weird linker error, but dont need this anyway.
-																// reason explained here: 
-																// https://www.daniweb.com/programming/software-development/threads/114299/undefined-reference-to-vtable-for
-		virtual void openItem();
+		// setter ------------------------------------
+		virtual void setIcon(RenderWindow& window) override;
 		// -------------------------------------------
 
 		// getter ------------------------------------
-		virtual itemInfo getInfo() const;
+		virtual itemInfo getInfo() const override;
+		// -------------------------------------------
+
+		// void --------------------------------------
+		string getFileType();
+		virtual void openItem() const override;
 		// -------------------------------------------
 	
 	protected:
@@ -126,29 +134,48 @@ int main()
 	testDir.populate();
 	testDir.printContents();
 
-
-	// The stuff you did is below, im just commenting it out temporarily
-	// -------------------------------
-	/*
-
-	VideoMode vm(1200, 675);
-
-	RenderWindow window(vm, "File Explorer", Style::Close);
+	// SFML set-up
+	// --------------------------------------------------------------------
+	Vector2i defaultWindowSize(1200, 675);
+	VideoMode vm(defaultWindowSize.x, defaultWindowSize.y);
+	RenderWindow window(vm, "File Explorer" /*, Style::Close*/);
+	Event event;
+	Vector2u currentWindowSize(window.getSize());
+	
+	RectangleShape background(static_cast<Vector2f>(defaultWindowSize));
+	background.setPosition(Vector2f(0.0, 0.0));
+	// --------------------------------------------------------------------
 
 	// MAIN LOOP
 	// ##########################################################################################
-	
+	bool wait = false;
 	while (window.isOpen())
 	{
-		if (Keyboard::isKeyPressed(Keyboard::Escape))
+		while (window.pollEvent(event))
 		{
-			window.close();
+			if (Keyboard::isKeyPressed(Keyboard::Escape))
+			{
+				window.close();
+			}
 		}
+		
 
-		window.clear();
-		window.display();
+		if (wait == false || window.getSize() != currentWindowSize)
+		{
+			window.clear();
+			//window.draw(background);
+			testDir.displayContents(window);
+
+			//CircleShape shape(50);
+			//shape.setFillColor(sf::Color(100, 250, 50));
+			//window.draw(shape);
+
+			window.display();
+			wait = true;
+		}
+		usleep(500);
 	}
-	*/
+	
 	// ##########################################################################################
 
 	return 0;
@@ -157,7 +184,70 @@ int main()
 // FUNCTION DEFS
 // --------------------------------------------------------------------
 
-// collects the things stored in the directory and saves them in the vector member with identifier "location"
+void Directory::displayContents(RenderWindow& windowParam) const
+{
+
+	/*
+	contents[0]->setIcon();
+	//Sprite tempSprite(contents[0]->getInfo().icon);
+	Sprite tempSprite;
+
+	
+	Texture testTexture;
+	testTexture.loadFromFile("/home/r/Pictures/Screenshots/question.png");
+	info.icon = testTexture;
+	tempSprite.setTexture(info.icon);
+	//tempSprite.setTexture(testTexture);
+	
+
+	//tempSprite.setTexture(contents[0]->getInfo().icon);
+	tempSprite.setPosition(0.0, 0.0);
+	windowParam.draw(tempSprite);
+	*/
+
+
+	for (int index = 0; index < contents.size() - 1; index++)
+	{
+		//setIcon(contents.at(index));
+		
+		contents.at(index)->setIcon(windowParam);
+
+		Sprite tempSprite;
+		tempSprite.setTexture(*contents.at(index)->getInfo().iconPtr);
+		tempSprite.setPosition(0.0, 0.0);
+		windowParam.draw(tempSprite);
+		cout << "index: " << index << endl;
+		
+		
+
+		/*
+		CircleShape myCircle(50);
+		myCircle.setFillColor(Color(100, 250, 50));
+		windowParam.draw(myCircle);
+		*/
+	}
+
+}
+
+void Directory::setIcon(RenderWindow& window)
+{
+	info.iconPtr = new Texture;
+	info.iconPtr->loadFromFile("/home/r/Pictures/Screenshots/question.png");	// generic directory image
+	textureIcons.push_back(info.iconPtr);
+
+}
+
+void File::setIcon(RenderWindow& window)
+{
+	info.iconPtr = new Texture;
+	info.iconPtr->loadFromFile("/home/r/Pictures/Screenshots/question.png");
+	//textureIcons.push_back(info.iconPtr);
+}
+
+
+
+
+
 
 File::File(filesystem::path initPath) : Item(initPath)
 		{
@@ -173,12 +263,14 @@ File::File(filesystem::path initPath) : Item(initPath)
 			fileType = parseFileData(fileInfo);
 		}
 
-void Directory::openItem()
+
+
+void Directory::openItem() const
 {
 
 }
 
-void File::openItem()
+void File::openItem() const
 {
 
 }
@@ -229,6 +321,7 @@ filesystem::path Item::getPath() const
 	return location;
 }
 
+/*
 itemInfo Item::getInfo() const
 {
 	itemInfo holder;
@@ -236,24 +329,24 @@ itemInfo Item::getInfo() const
 	holder.fileType = "";
 	return holder;
 }
+*/
 
 itemInfo Directory::getInfo() const
 {
-	itemInfo holder;
-	holder.location = location.string();
+	itemInfo holder = info;
+	holder.location = location.string();			// this line. 
 	holder.fileType = "directory";
+	holder.icon = info.icon;
 	return holder;
-
 }
 
 
 itemInfo File::getInfo() const
 {
-	itemInfo holder;
-	holder.location = location.string();
+	itemInfo holder = info;
+	holder.location = location.string();		// this line
 	holder.fileType = fileType;
 	return holder;
-
 }
 
 void Directory::printContents() const
@@ -303,7 +396,7 @@ string getNameFromFullPath(string pathParam)
 }
 
 
-void File::getFileType()
+string File::getFileType()
 {
 	// just return the thing
 
