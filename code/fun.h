@@ -88,7 +88,7 @@ class Directory : public Item
 
 		// void -----------------------------
 		void printContents() const;						// print the names and paths of the things in the directory
-		void displayContents(RenderWindow& windowParam) const;							// display the directory in the browser
+		void displayContents(RenderWindow& windowParam, RectangleShape& background, View& mainView) const;							// display the directory in the browser
 		virtual void openItem() const override;
 		// ----------------------------------
 

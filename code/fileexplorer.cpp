@@ -14,6 +14,8 @@ using namespace std;
 int main()
 {
 	cout << endl << endl << "------------------" << endl << endl;
+
+
 	filesystem::path currentDir = "/home/r/Desktop/testDir";	// Set this directory to be something on your computer		
 	Directory testDir(currentDir);
 
@@ -22,11 +24,13 @@ int main()
 
 	// SFML set-up
 	// --------------------------------------------------------------------
-	Vector2i defaultWindowSize(1200, 675);
+	Vector2i defaultWindowSize(3840, 2160);
 	VideoMode vm(defaultWindowSize.x, defaultWindowSize.y);
-	RenderWindow window(vm, "File Explorer" /*, Style::Close*/);
+	RenderWindow window(vm, "File Explorer", Style::Resize);
 	Event event;
 	Vector2u currentWindowSize(window.getSize());
+	View mainView(FloatRect(0.0, 0.0, 1920,1080));
+	window.setView(mainView);
 	
 	RectangleShape background(static_cast<Vector2f>(defaultWindowSize));
 	background.setPosition(Vector2f(0.0, 0.0));
@@ -50,7 +54,7 @@ int main()
 		{
 			window.clear();
 			//window.draw(background);
-			testDir.displayContents(window);
+			testDir.displayContents(window, background, mainView);
 
 			//CircleShape shape(50);
 			//shape.setFillColor(sf::Color(100, 250, 50));
@@ -59,7 +63,7 @@ int main()
 			window.display();
 			wait = true;
 		}
-		usleep(500);
+		usleep(50000);
 	}
 	
 	// ##########################################################################################

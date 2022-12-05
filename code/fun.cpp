@@ -9,27 +9,148 @@
 // FUNCTION DEFS
 // --------------------------------------------------------------------
 
-void Directory::displayContents(RenderWindow& windowParam) const
+void Directory::displayContents(RenderWindow& windowParam, RectangleShape& background, View& mainView) const
 {
+	// adjusting the view to be same as window size
+	Vector2f size = static_cast<Vector2f>(windowParam.getSize());
+	mainView = View(FloatRect(0.f, 0.f, size.x, size.y));  // what does the .f do??
+	windowParam.setView(mainView);
+
+	windowParam.draw(background);
+	Vector2f itemCoords(0.0, 0.0);
+
+
+	// -------
+
+	int horizontalWidth = size.x;
+	int verticalWidth = size.y;
+	vector<Vector2f> gridCoords;
+
+	int yPos = 0;
+	int xPos = 0;
+	for (int index = 0; index < verticalWidth; index = index + 120)
+	{
+		for (int subIndex = 0; subIndex < (horizontalWidth - 120); subIndex = subIndex + 120)
+		{
+			xPos = subIndex;
+			gridCoords.push_back(Vector2f(xPos, yPos));
+
+			//cout << "subIndex:  " << (subIndex) << endl;
+			//cout << "horizontalWidth: " << horizontalWidth << endl;
+			//cout << endl << endl;
+		}
+
+		xPos = 0;
+		yPos = index + 120;
+		gridCoords.push_back(Vector2f(xPos, yPos));
+	}
+
+	 for (auto thing : gridCoords)
+	{
+		cout << thing.x << "and " << thing.y;
+		//cout << thing.y << endl;
+		cout << "\t";
+	} 
+
 	for (int index = 0; index < contents.size() - 1; index++)
 	{
 		contents.at(index)->setIcon();
-
 		Sprite tempSprite;
 		tempSprite.setTexture(*contents.at(index)->getInfo().iconPtr);
-		tempSprite.setPosition(0.0, 0.0);
 
-		windowParam.draw(tempSprite);
-
-		//cout << "index: " << index << endl;
+		try 
+		{
+			tempSprite.setPosition(gridCoords.at(index));
+			windowParam.draw(tempSprite);
+		}
+		catch (out_of_range& outOfRangeException)
+		{
+			
+		}
+		
 	}
+
+	/*
+	// already have size
+	int horizontalWidth = size.x;
+	int thingsInCurrentLine = 0;
+	for (int index = 0; index < contents.size() - 1; index++)
+	{
+		
+		float horizontalSpaceUsed = thingsInCurrentLine * 120.0;
+
+		cout << "horizontalSpaceUsed: " << horizontalSpaceUsed << endl;
+		cout << "horizontalWidth: " << horizontalWidth << endl;
+		cout << endl << endl;
+
+		if (horizontalSpaceUsed >= (thingsInCurrentLine * 120 ) )
+		{
+
+		}
+	
+	}
+	*/
+
+
+
+	/*
+	int newOffsetCountStartIndex = 0;
+	for (int index = 0; index < contents.size() - 1; index++)
+	{
+		Vector2u currentWindowSize = windowParam.getSize();
+
+		float horizontalSpaceUsed = index * 120.0;
+		int horizontalWidth = (currentWindowSize.x / 120.0); 
+
+	
+		contents.at(index)->setIcon();
+		Sprite tempSprite;
+		tempSprite.setTexture(*contents.at(index)->getInfo().iconPtr);
+
+		// going a line down
+		int lineOffset = 0;
+		if (horizontalSpaceUsed >= (horizontalWidth * 120.0) )
+		{
+			lineOffset++;
+			newOffsetCountStartIndex = index;
+			//itemCoords.x = 0;
+			itemCoords.x = 0;
+			//itemCoords.y = itemCoords.y + (120 * lineOffset);
+		}
+
+		else if (horizontalSpaceUsed < (horizontalWidth * 120.0) )
+		{
+			//itemCoords.x += 120;
+		}
+
+		itemCoords.x += 120;
+		itemCoords.y = itemCoords.y + (120 * lineOffset);
+		
+
+		cout << "horitzontalWidth: " << horizontalWidth << endl;
+		cout << "horizontalSpaceUsed: " << horizontalSpaceUsed << endl;
+		cout << endl << endl;
+		
+
+		//tempSprite.setPosition(itemCoords);
+		tempSprite.setPosition(itemCoords.x, itemCoords.y);
+		windowParam.draw(tempSprite);
+		
+
+
+
+		// incrementing
+		
+
+	}
+	*/
 
 }
 
 void Directory::setIcon()
 {
 	info.iconPtr = new Texture;
-	info.iconPtr->loadFromFile("/home/r/Pictures/Screenshots/question.png");	// generic directory image
+	info.iconPtr->loadFromFile("/home/r/Pictures/Captures d’écran/Capture d’écran du 2022-12-04 00-41-38.png");	// generic directory image
 	textureIcons.push_back(info.iconPtr);
 
 }
@@ -37,7 +158,7 @@ void Directory::setIcon()
 void File::setIcon()
 {
 	info.iconPtr = new Texture;
-	info.iconPtr->loadFromFile("/home/r/Pictures/Screenshots/question.png");
+	info.iconPtr->loadFromFile("/home/r/Pictures/Captures d’écran/Capture d’écran du 2022-12-04 00-41-38.png");
 	//textureIcons.push_back(info.iconPtr);
 }
 
