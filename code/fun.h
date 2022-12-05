@@ -30,6 +30,8 @@ string getNameFromFullPath(string pathParam);
 //void populateDirectory(Directory& directoryParam);
 filesystem::path getPath();
 string parseFileData(fstream& fileInfoParam);
+
+char* getNameFromFullPath_CStr(string pathParam);
 // --------------------------------------------------------------------
 
 // CLASSES

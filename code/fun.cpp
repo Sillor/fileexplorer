@@ -151,8 +151,50 @@ Sprite File::resizeSprite(Sprite& spriteParam)
 		command2 += " /home/r/Desktop/testDir/.file_explorer_thumbs";
 		*/
 
+		// WORKS
+		string commandX = "cd /home/r/Desktop/testDir/ && ";
+		commandX += "convert \"4.jpg\" -resize 18% .file_explorer_thumb_4.jpg";
 
+		// ALMOST WORKS
 		
+		string command2 = "cd ";
+		command2 += pathStr;
+		command2 += " && ";
+		command2 += "convert ";
+		//command2 += "\"";
+		string name = getNameFromFullPath(thing.path());
+		command2 += thing.path().c_str();
+		//command2 += name;
+		//command2 += "\"";
+		command2 += " -resize 18% ";
+		//command2 += "\"";
+		command2 += ".file_explorer_thumb_";
+		command2 += thing.path().filename().c_str();		// IT WORKS OMG OMG OMG 
+		//command2 += name;
+		//command2 += "\"";
+		
+
+		/*
+		string command2 = "cd ";
+		command2 += pathStr;
+		command2 += " && ";
+		command2 += "convert ";
+		//command2 += "\"";
+		//command2 += thing.path().c_str();		// this line not working
+		command2 += getNameFromFullPath_CStr(thing.path());
+		//command2 += "\"";
+		command2 += " -resize 18% ";
+		//command2 += "\"";
+		command2 += ".file_explorer_thumb_";
+		command2 += getNameFromFullPath_CStr(thing.path());;		// this line not working
+		//command2 += "\"";
+		*/
+
+		if (commandX == command2)
+			cout << "THEYRE TGHE SQME " << endl;
+		
+
+		/*
 		string command2 = "convert ";
 		//command2 += pathStr;
 		command2 += thing.path();
@@ -164,10 +206,13 @@ Sprite File::resizeSprite(Sprite& spriteParam)
 		string nameWithoutPath = getNameFromFullPath(getInfo().location);
 		command2 += nameWithoutPath;
 		//command2 += "\"";
+		*/
 		
-
+		cout << "COMMAND X: " << commandX.c_str() << endl << endl;
+		cout << "COMMAND 2 C String: " << command2.c_str() << endl << endl;
 		cout << "COMMAND 2: " << command2 << endl << endl;
 		system(command2.c_str());
+		
 
 		//string command3 = "convert ";
 		//command3 += 
@@ -372,6 +417,37 @@ string getNameFromFullPath(string pathParam)
     //cout << returnVal << endl;
 
     return returnVal;
+}
+
+char* getNameFromFullPath_CStr(string pathParam)
+{
+    string reversedString = "";          
+
+    // Getting the name in reverse
+    for (int index = pathParam.length(); index != 0; index--)
+    {
+
+        if (pathParam[index] != '/')
+        {
+            reversedString = reversedString + pathParam[index];
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    string returnVal = "";
+    // Putting the name in the correct order
+    for (int index = 0; index < reversedString.length(); index++)
+    {
+        returnVal = returnVal + reversedString[reversedString.length() - index];
+    }
+
+	// TEST OUTPUT
+    //cout << returnVal << endl;
+
+    return returnVal.c_str();
 }
 
 
