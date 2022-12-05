@@ -52,8 +52,9 @@ int main()
 
 		if (wait == false || window.getSize() != currentWindowSize)
 		{
+			
 			window.clear();
-			//window.draw(background);
+			//window.draw(background);			
 			testDir.displayContents(window, background, mainView);
 
 			//CircleShape shape(50);
@@ -62,8 +63,10 @@ int main()
 
 			window.display();
 			wait = true;
+			//testDir.cleanTexture();
 		}
 		usleep(50000);
+		
 	}
 	
 	// ##########################################################################################

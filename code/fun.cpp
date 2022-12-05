@@ -9,7 +9,7 @@
 // FUNCTION DEFS
 // --------------------------------------------------------------------
 
-void Directory::displayContents(RenderWindow& windowParam, RectangleShape& background, View& mainView) const
+void Directory::displayContents(RenderWindow& windowParam, RectangleShape& background, View& mainView) 
 {
 	// adjusting the view to be same as window size
 	Vector2f size = static_cast<Vector2f>(windowParam.getSize());
@@ -62,88 +62,20 @@ void Directory::displayContents(RenderWindow& windowParam, RectangleShape& backg
 		{
 			tempSprite.setPosition(gridCoords.at(index));
 			windowParam.draw(tempSprite);
+
+			contents.at(index)->cleanTexture();		
+			
 		}
 		catch (out_of_range& outOfRangeException)
 		{
-			
 		}
 		
 	}
 
-	/*
-	// already have size
-	int horizontalWidth = size.x;
-	int thingsInCurrentLine = 0;
-	for (int index = 0; index < contents.size() - 1; index++)
-	{
-		
-		float horizontalSpaceUsed = thingsInCurrentLine * 120.0;
-
-		cout << "horizontalSpaceUsed: " << horizontalSpaceUsed << endl;
-		cout << "horizontalWidth: " << horizontalWidth << endl;
-		cout << endl << endl;
-
-		if (horizontalSpaceUsed >= (thingsInCurrentLine * 120 ) )
-		{
-
-		}
-	
-	}
-	*/
-
-
-
-	/*
-	int newOffsetCountStartIndex = 0;
-	for (int index = 0; index < contents.size() - 1; index++)
-	{
-		Vector2u currentWindowSize = windowParam.getSize();
-
-		float horizontalSpaceUsed = index * 120.0;
-		int horizontalWidth = (currentWindowSize.x / 120.0); 
+	//delete info.iconPtr; 
+	//info.iconPtr = nullptr;
 
 	
-		contents.at(index)->setIcon();
-		Sprite tempSprite;
-		tempSprite.setTexture(*contents.at(index)->getInfo().iconPtr);
-
-		// going a line down
-		int lineOffset = 0;
-		if (horizontalSpaceUsed >= (horizontalWidth * 120.0) )
-		{
-			lineOffset++;
-			newOffsetCountStartIndex = index;
-			//itemCoords.x = 0;
-			itemCoords.x = 0;
-			//itemCoords.y = itemCoords.y + (120 * lineOffset);
-		}
-
-		else if (horizontalSpaceUsed < (horizontalWidth * 120.0) )
-		{
-			//itemCoords.x += 120;
-		}
-
-		itemCoords.x += 120;
-		itemCoords.y = itemCoords.y + (120 * lineOffset);
-		
-
-		cout << "horitzontalWidth: " << horizontalWidth << endl;
-		cout << "horizontalSpaceUsed: " << horizontalSpaceUsed << endl;
-		cout << endl << endl;
-		
-
-		//tempSprite.setPosition(itemCoords);
-		tempSprite.setPosition(itemCoords.x, itemCoords.y);
-		windowParam.draw(tempSprite);
-		
-
-
-
-		// incrementing
-		
-
-	}
-	*/
 
 }
 
@@ -151,13 +83,13 @@ void Directory::setIcon()
 {
 	info.iconPtr = new Texture;
 	info.iconPtr->loadFromFile("/home/r/Pictures/Captures d’écran/Capture d’écran du 2022-12-04 00-41-38.png");	// generic directory image
-	textureIcons.push_back(info.iconPtr);
+	//textureIcons.push_back(info.iconPtr);
 
 }
 
 void File::setIcon()
 {
-	info.iconPtr = new Texture;
+	info.iconPtr = new Texture;			// This causes a memory leak if you run it long enough?
 	info.iconPtr->loadFromFile("/home/r/Pictures/Captures d’écran/Capture d’écran du 2022-12-04 00-41-38.png");
 	//textureIcons.push_back(info.iconPtr);
 }

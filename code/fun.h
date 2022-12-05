@@ -45,6 +45,8 @@ class Item
 		// setter -----------------------
 		virtual void setIcon() = 0;								// UNDEFINED FOR NOW, will be used to determine which visual to use to represent the file/folder/sym link/whatever
 		void setIconScreenCoords() {};
+		void cleanTexture() { delete info.iconPtr; }
+			
 		// ------------------------------
 
 		// getter -----------------------
@@ -87,8 +89,8 @@ class Directory : public Item
 		// ----------------------------------
 
 		// void -----------------------------
-		void printContents() const;						// print the names and paths of the things in the directory
-		void displayContents(RenderWindow& windowParam, RectangleShape& background, View& mainView) const;							// display the directory in the browser
+		void printContents() const;				// print the names and paths of the things in the directory
+		void displayContents(RenderWindow& windowParam, RectangleShape& background, View& mainView);							// display the directory in the browser
 		virtual void openItem() const override;
 		// ----------------------------------
 
