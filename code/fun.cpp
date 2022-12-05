@@ -6,9 +6,6 @@
 #include <unistd.h>  
 #include "fun.h"
 
-// FUNCTION DEFS
-// --------------------------------------------------------------------
-
 void Directory::displayContents(RenderWindow& windowParam, RectangleShape& background, View& mainView) 
 {
 	// adjusting the view to be same as window size
@@ -18,7 +15,6 @@ void Directory::displayContents(RenderWindow& windowParam, RectangleShape& backg
 
 	windowParam.draw(background);
 	Vector2f itemCoords(0.0, 0.0);
-
 
 	// -------
 
@@ -47,9 +43,9 @@ void Directory::displayContents(RenderWindow& windowParam, RectangleShape& backg
 
 	 for (auto thing : gridCoords)
 	{
-		cout << thing.x << "and " << thing.y;
+		//cout << thing.x << "and " << thing.y;
 		//cout << thing.y << endl;
-		cout << "\t";
+		//cout << "\t";
 	} 
 
 	for (int index = 0; index < contents.size() - 1; index++)
@@ -57,25 +53,21 @@ void Directory::displayContents(RenderWindow& windowParam, RectangleShape& backg
 		contents.at(index)->setIcon();
 		Sprite tempSprite;
 		tempSprite.setTexture(*contents.at(index)->getInfo().iconPtr);
+		
+		tempSprite = contents.at(index)->resizeSprite(tempSprite);
+		//cout << "OUT" << endl;
 
 		try 
 		{
+			
 			tempSprite.setPosition(gridCoords.at(index));
 			windowParam.draw(tempSprite);
-
-			contents.at(index)->cleanTexture();		
-			
+			contents.at(index)->cleanTexture();		// fixes memory leak
+			//cout << "IN HERE" << endl;
 		}
-		catch (out_of_range& outOfRangeException)
-		{
-		}
+		catch (out_of_range& outOfRangeException) { cout << "ERROR" << endl; }
 		
 	}
-
-	//delete info.iconPtr; 
-	//info.iconPtr = nullptr;
-
-	
 
 }
 
@@ -89,9 +81,146 @@ void Directory::setIcon()
 
 void File::setIcon()
 {
-	info.iconPtr = new Texture;			// This causes a memory leak if you run it long enough?
-	info.iconPtr->loadFromFile("/home/r/Pictures/Captures d’écran/Capture d’écran du 2022-12-04 00-41-38.png");
+	info.iconPtr = new Texture;		
+	//info.iconPtr->loadFromFile("/home/r/Pictures/Captures d’écran/Capture d’écran du 2022-12-04 00-41-38.png");
+	info.iconPtr->loadFromFile(getInfo().location);
+
 	//textureIcons.push_back(info.iconPtr);
+}
+
+Sprite File::resizeSprite(Sprite& spriteParam)
+{
+	
+	
+	
+	//Vector2f nativeScale = spriteParam.getScale();
+	FloatRect w_h = spriteParam.getLocalBounds();		// this actually gets the resolution of the image
+	int width = w_h.width;
+	int height = w_h.height;
+	//cout << info.location << ":\t" << "x: " << w_h.width << ", y: " << w_h.height << endl << endl;	
+
+
+	float index = 0.95;
+
+	// getting folder name from file name by deleting last part of the path -------------------
+	int index2 = getInfo().location.length() - 1;
+	string pathStr = getInfo().location;
+	char character = pathStr[index2];
+	while (character != '/')
+	{
+		pathStr = pathStr.substr(0, index2);
+		index2--;
+		character = pathStr[index2];
+	}
+	// -----------------------------------------------------------------------------------------
+
+	// determining if a directory named ".file_explorer_thumbs" is present , making it if not --
+	bool thumbsFolderPresent = false;
+	for (auto & thing : filesystem::directory_iterator(pathStr))
+	{
+		cout << thing << endl;
+		string stringToSearch = thing.path();
+		if (stringToSearch.find(".file_explorer_thumbs", 0) != string::npos  )
+		{
+			thumbsFolderPresent = true;
+			break;
+		}
+	}
+	cout << "DONE" << endl;
+
+	// creating the directory if it does not already exist
+	if (thumbsFolderPresent == false)
+	{
+		string command = "mkdir ";
+		command = command + pathStr;
+		command = command + ".file_explorer_thumbs";
+		cout << "COMMAND: " << command << endl;
+		system(command.c_str());
+	}
+	// -----------------------------------------------------------------------------------------
+	//thumbsFolderPresent = checkForThumbsFolder();
+
+	// getting just the file name without the path
+	
+	
+	for (auto & thing : filesystem::directory_iterator(pathStr))
+	{
+		/*
+		string command2 = "cp ";
+		command2 += thing.path();
+		command2 += " /home/r/Desktop/testDir/.file_explorer_thumbs";
+		*/
+
+
+		
+		string command2 = "convert ";
+		//command2 += pathStr;
+		command2 += thing.path();
+		//command2 += "\"";
+		command2 += " -resize 18% ";
+		//command2 += "\"";
+		command2 += pathStr;
+		//command2 += ".file_explorer_thumbs/";
+		string nameWithoutPath = getNameFromFullPath(getInfo().location);
+		command2 += nameWithoutPath;
+		//command2 += "\"";
+		
+
+		cout << "COMMAND 2: " << command2 << endl << endl;
+		system(command2.c_str());
+
+		//string command3 = "convert ";
+		//command3 += 
+	}
+	
+
+	
+	// while...
+	
+	
+	
+	
+	 /* while (spriteParam.getGlobalBounds().width > 110)
+	{
+		spriteParam.setScale(index, index);
+		width = width * 0.95;
+		index = index - 0.02;
+
+
+		FloatRect testRect = spriteParam.getGlobalBounds();
+		float testWidth = testRect.width;
+		float testHeight = testRect.height;
+
+		//cout << testWidth << "  " << testHeight << endl;
+	} */
+
+	
+	/* while (spriteParam.getGlobalBounds().height > 110)
+	{
+		spriteParam.setScale(index, index);
+		width = width * 0.95;
+		index = index - 0.02;
+
+
+		FloatRect testRect = spriteParam.getGlobalBounds();
+		float testWidth = testRect.width;
+		float testHeight = testRect.height;
+
+		//cout << testWidth << "  " << testHeight << endl;
+	} */
+	
+	return spriteParam;
+}
+
+//bool checkForThumbsFolder()
+//{
+//	for (auto & thing : filesystem::directory_iterator(getInfo().info.))
+//}
+
+
+Sprite Directory::resizeSprite(Sprite& spriteParam)
+{
+	return spriteParam;
 }
 
 

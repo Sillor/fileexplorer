@@ -24,7 +24,7 @@ int main()
 
 	// SFML set-up
 	// --------------------------------------------------------------------
-	Vector2i defaultWindowSize(3840, 2160);
+	Vector2i defaultWindowSize(1920, 1080);
 	VideoMode vm(defaultWindowSize.x, defaultWindowSize.y);
 	RenderWindow window(vm, "File Explorer", Style::Resize);
 	Event event;
@@ -39,6 +39,7 @@ int main()
 	// MAIN LOOP
 	// ##########################################################################################
 	bool wait = false;
+	int counter = 0;
 	while (window.isOpen())
 	{
 		while (window.pollEvent(event))
@@ -49,9 +50,15 @@ int main()
 			}
 		}
 		
-
-		if (wait == false || window.getSize() != currentWindowSize)
+		if (window.getSize() != currentWindowSize)
 		{
+			wait = false;
+			currentWindowSize = window.getSize();
+		}
+
+		if (wait == false /*|| window.getSize() != currentWindowSize*/)
+		{
+			
 			
 			window.clear();
 			//window.draw(background);			
@@ -64,6 +71,9 @@ int main()
 			window.display();
 			wait = true;
 			//testDir.cleanTexture();
+
+			counter++;
+			cout << counter << endl;
 		}
 		usleep(50000);
 		

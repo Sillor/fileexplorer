@@ -43,7 +43,7 @@ class Item
 		// ------------------------------
 
 		// setter -----------------------
-		virtual void setIcon() = 0;								// UNDEFINED FOR NOW, will be used to determine which visual to use to represent the file/folder/sym link/whatever
+		virtual void setIcon() = 0;								
 		void setIconScreenCoords() {};
 		void cleanTexture() { delete info.iconPtr; }
 			
@@ -55,8 +55,9 @@ class Item
 		Vector2i getIconScreenCoords() const {};
 		// ------------------------------
 
-		// void -------------------------
+		// other -------------------------
 		virtual void openItem() const = 0;
+		virtual Sprite resizeSprite(Sprite& spriteParam) = 0;
 		// ------------------------------								
 
 	protected:
@@ -88,10 +89,11 @@ class Directory : public Item
 		virtual itemInfo getInfo() const override;
 		// ----------------------------------
 
-		// void -----------------------------
+		// other -----------------------------
 		void printContents() const;				// print the names and paths of the things in the directory
 		void displayContents(RenderWindow& windowParam, RectangleShape& background, View& mainView);							// display the directory in the browser
 		virtual void openItem() const override;
+		virtual Sprite resizeSprite(Sprite& spriteParam);
 		// ----------------------------------
 
 	protected:
@@ -118,9 +120,10 @@ class File : public Item
 		virtual itemInfo getInfo() const override;
 		// -------------------------------------------
 
-		// void --------------------------------------
+		// other --------------------------------------
 		string getFileType();
 		virtual void openItem() const override;
+		virtual Sprite resizeSprite(Sprite& spriteParam);
 		// -------------------------------------------
 	
 	protected:
