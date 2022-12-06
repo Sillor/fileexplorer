@@ -3,22 +3,21 @@
 #include <filesystem>
 #include <vector>
 #include <fstream>
-#include <unistd.h>  
+#include <unistd.h>
 #include "fun.h"
 
 // FUNCTION DEFS
 // --------------------------------------------------------------------
 
-void Directory::displayContents(RenderWindow& windowParam, RectangleShape& background, View& mainView) 
+void Directory::displayContents(RenderWindow &windowParam, RectangleShape &background, View &mainView)
 {
 	// adjusting the view to be same as window size
 	Vector2f size = static_cast<Vector2f>(windowParam.getSize());
-	mainView = View(FloatRect(0.f, 0.f, size.x, size.y));  // what does the .f do??
+	mainView = View(FloatRect(0.f, 0.f, size.x, size.y)); // what does the .f do??
 	windowParam.setView(mainView);
 
 	windowParam.draw(background);
 	Vector2f itemCoords(0.0, 0.0);
-
 
 	// -------
 
@@ -35,9 +34,9 @@ void Directory::displayContents(RenderWindow& windowParam, RectangleShape& backg
 			xPos = subIndex;
 			gridCoords.push_back(Vector2f(xPos, yPos));
 
-			//cout << "subIndex:  " << (subIndex) << endl;
-			//cout << "horizontalWidth: " << horizontalWidth << endl;
-			//cout << endl << endl;
+			// cout << "subIndex:  " << (subIndex) << endl;
+			// cout << "horizontalWidth: " << horizontalWidth << endl;
+			// cout << endl << endl;
 		}
 
 		xPos = 0;
@@ -45,12 +44,12 @@ void Directory::displayContents(RenderWindow& windowParam, RectangleShape& backg
 		gridCoords.push_back(Vector2f(xPos, yPos));
 	}
 
-	 for (auto thing : gridCoords)
+	for (auto thing : gridCoords)
 	{
 		cout << thing.x << "and " << thing.y;
-		//cout << thing.y << endl;
+		// cout << thing.y << endl;
 		cout << "\t";
-	} 
+	}
 
 	for (int index = 0; index < contents.size() - 1; index++)
 	{
@@ -58,110 +57,136 @@ void Directory::displayContents(RenderWindow& windowParam, RectangleShape& backg
 		Sprite tempSprite;
 		tempSprite.setTexture(*contents.at(index)->getInfo().iconPtr);
 
-		try 
+		try
 		{
 			tempSprite.setPosition(gridCoords.at(index));
 			windowParam.draw(tempSprite);
 
-			contents.at(index)->cleanTexture();		
-			
+			contents.at(index)->cleanTexture();
 		}
-		catch (out_of_range& outOfRangeException)
+		catch (out_of_range &outOfRangeException)
 		{
 		}
-		
 	}
 
-	//delete info.iconPtr; 
-	//info.iconPtr = nullptr;
-
-	
-
+	// delete info.iconPtr;
+	// info.iconPtr = nullptr;
 }
 
 void Directory::setIcon()
 {
 	info.iconPtr = new Texture;
-	info.iconPtr->loadFromFile("/home/admin/Desktop/Capture_decran_du_2022-12-04_00-41-38.png");	// generic directory image
-	//textureIcons.push_back(info.iconPtr);
-
+	info.iconPtr->loadFromFile("/home/admin/Desktop/Capture_decran_du_2022-12-04_00-41-38.png"); // generic directory image
+																								 // textureIcons.push_back(info.iconPtr);
 }
 
 void File::setIcon()
 {
-	info.iconPtr = new Texture;			// This causes a memory leak if you run it long enough?
+	info.iconPtr = new Texture; // This causes a memory leak if you run it long enough?
 	info.iconPtr->loadFromFile("/home/admin/Desktop/Capture_decran_du_2022-12-04_00-41-38.png");
-	//textureIcons.push_back(info.iconPtr);
+	// textureIcons.push_back(info.iconPtr);
 }
 
+void ImageFile::setIcon()
+{
 
-
-
-
+}
 
 File::File(filesystem::path initPath) : Item(initPath)
-		{
-			string pathStr = getInfo().location;
-			string command = "";				// command to pass to system() to get the file type info
-			string quotes = "\"";	
-			command = "file " + quotes + pathStr + quotes + " > \"system call output.txt\"";
-			system(command.c_str());
+{
+	string pathStr = getInfo().location;
+	string command = ""; // command to pass to system() to get the file type info
+	string quotes = "\"";
+	command = "file " + quotes + pathStr + quotes + " > \"system call output.txt\"";
+	system(command.c_str());
 
-			fstream fileInfo("system call output.txt");
-			if (fileInfo.fail()) { cout << "FILE OPEN FAILURE << endl"; }
+	fstream fileInfo("system call output.txt");
+	if (fileInfo.fail())
+	{
+		cout << "FILE OPEN FAILURE << endl";
+	}
 
-			fileType = parseFileData(fileInfo);
-		}
+	fileType = parseFileData(fileInfo);
+}
 
+ImageFile::ImageFile(filesystem::path initPath) : File(initPath)
+{
+	string pathStr = getInfo().location;
+	string command = ""; // command to pass to system() to get the file type info
+	string quotes = "\"";
+	command = "file " + quotes + pathStr + quotes + " > \"system call output.txt\"";
+	system(command.c_str());
 
+	fstream fileInfo("system call output.txt");
+	if (fileInfo.fail())
+	{
+		cout << "FILE OPEN FAILURE << endl";
+	}
+
+	fileType = parseFileData(fileInfo);
+}
 
 void Directory::openItem() const
 {
-
 }
 
 void File::openItem() const
 {
-
 }
+
+void ImageFile::openItem() const
+{}
 
 void Directory::populate()
 {
-	
+
 	// passing member var 'location' to a <filesystem> iterator which
-	// generates a filesystem::directory_entry object 
+	// generates a filesystem::directory_entry object
 	// (its identifier is "file", in the loop condition) for each thing
 	// in the location as the for loop goes through everything.
 	//
 	// The rest of the loop body is adding each thing to the member list
 	// named "contents".
-	for (const filesystem::directory_entry & file : filesystem::directory_iterator(getPath()))																												
-	{			
-		if (filesystem::is_directory(file.path()))		// translation: is it a folder itself?
+	for (const filesystem::directory_entry &file : filesystem::directory_iterator(getPath()))
+	{
+		//string something = getNameFromFullPath(file.path());
+
+		if (filesystem::is_directory(file.path())) // translation: is it a folder itself?
 		{
-			Item* tempPtr = nullptr;								
-			tempPtr = new Directory(file.path());	
+			Item *tempPtr = nullptr;
+			tempPtr = new Directory(file.path());
 			contents.push_back(tempPtr);
-			//cout << getNameFromFullPath(file.path()) << right << "\t\t\t" << "DIRECTORY ADDED" << endl;
+			// cout << getNameFromFullPath(file.path()) << right << "\t\t\t" << "DIRECTORY ADDED" << endl;
 		}
 
 		else if (filesystem::is_symlink(file.path()))
 		{
-			Item* tempPtr = nullptr;
+			Item *tempPtr = nullptr;
 			tempPtr = new Directory(file.path());
 			contents.push_back(tempPtr);
-			//cout << "SYM LINK ADDED" << endl;
+			// cout << "SYM LINK ADDED" << endl;
 		}
+		/*
+		else if (fileType == "jpg")
+		{
+			Item* tempPtr = nullptr;
+			tempPtr = new Image(file.path());
+			contents.push_back(tempPtr);
+		}
+		*/
 
-		else	// if its anything other than a directory...
+		else // if its anything other than a directory...
 		{
 			// will need to call functions to detect file type in here as well
 			// so you arent creating a generic File object for each thing every time.
 			// only do that if the file type cannot be determined.
-			Item* tempPtr2 = new File(file.path());
+			Item *tempPtr2 = new File(file.path());
+
+			string fileType = tempPtr2->getInfo().fileType;
+
 			contents.push_back(tempPtr2);
 
-			//cout << getNameFromFullPath(file.path()) << right << "\t\t\t" << "MISCELLANEOUS THING ADDED" << endl;
+			// cout << getNameFromFullPath(file.path()) << right << "\t\t\t" << "MISCELLANEOUS THING ADDED" << endl;
 		}
 	}
 }
@@ -181,145 +206,154 @@ itemInfo Item::getInfo() const
 }
 */
 
+//itemInfo File::Item::getInfo() const
+itemInfo ImageFile::getInfo() const
+{
+	itemInfo holder = info;
+	holder.location = location.string(); // this line.
+	holder.fileType = "directory";
+	holder.icon = info.icon;
+	return holder;
+}
+
 itemInfo Directory::getInfo() const
 {
 	itemInfo holder = info;
-	holder.location = location.string();			// this line. 
+	holder.location = location.string(); // this line.
 	holder.fileType = "directory";
 	holder.icon = info.icon;
 	return holder;
 }
 
 
+
 itemInfo File::getInfo() const
 {
 	itemInfo holder = info;
-	holder.location = location.string();		// this line
+	holder.location = location.string(); // this line
 	holder.fileType = fileType;
 	return holder;
 }
 
 void Directory::printContents() const
 {
-	for (int index = 0; index < contents.size(); index++)		
-	{	
-		//string holder = contents[index]->getPathStr();		
-		//cout << holder << endl;
-		
-		//cout << contents[index]->getPathStr().location << "\t\t" << contents[index]->getPathStr().fileType << endl;
+	for (int index = 0; index < contents.size(); index++)
+	{
+		// string holder = contents[index]->getPathStr();
+		// cout << holder << endl;
+
+		// cout << contents[index]->getPathStr().location << "\t\t" << contents[index]->getPathStr().fileType << endl;
 		cout << contents[index]->getInfo().fileType << ": " << endl;
-		cout << contents[index]->getInfo().location << endl << endl;
+		cout << contents[index]->getInfo().location << endl
+			 << endl;
 	}
 }
-
 
 // Returns just the name of a file or a thing instead of its entire path
 string getNameFromFullPath(string pathParam)
 {
-    string reversedString = "";          
+	string reversedString = "";
 
-    // Getting the name in reverse
-    for (int index = pathParam.length(); index != 0; index--)
-    {
+	// Getting the name in reverse
+	for (int index = pathParam.length(); index != 0; index--)
+	{
 
-        if (pathParam[index] != '/')
-        {
-            reversedString = reversedString + pathParam[index];
-        }
-        else
-        {
-            break;
-        }
-    }
+		if (pathParam[index] != '/')
+		{
+			reversedString = reversedString + pathParam[index];
+		}
+		else
+		{
+			break;
+		}
+	}
 
-    string returnVal = "";
-    // Putting the name in the correct order
-    for (int index = 0; index < reversedString.length(); index++)
-    {
-        returnVal = returnVal + reversedString[reversedString.length() - index];
-    }
+	string returnVal = "";
+	// Putting the name in the correct order
+	for (int index = 0; index < reversedString.length(); index++)
+	{
+		returnVal = returnVal + reversedString[reversedString.length() - index];
+	}
 
 	// TEST OUTPUT
-    //cout << returnVal << endl;
+	// cout << returnVal << endl;
 
-    return returnVal;
+	return returnVal;
 }
 
-char* getNameFromFullPath_CStr(string pathParam)
+char *getNameFromFullPath_CStr(string pathParam)
 {
-    string reversedString = "";          
+	string reversedString = "";
 
-    // Getting the name in reverse
-    for (int index = pathParam.length(); index != 0; index--)
-    {
+	// Getting the name in reverse
+	for (int index = pathParam.length(); index != 0; index--)
+	{
 
-        if (pathParam[index] != '/')
-        {
-            reversedString = reversedString + pathParam[index];
-        }
-        else
-        {
-            break;
-        }
-    }
+		if (pathParam[index] != '/')
+		{
+			reversedString = reversedString + pathParam[index];
+		}
+		else
+		{
+			break;
+		}
+	}
 
-    string returnVal = "";
-    // Putting the name in the correct order
-    for (int index = 0; index < reversedString.length(); index++)
-    {
-        returnVal = returnVal + reversedString[reversedString.length() - index];
-    }
+	string returnVal = "";
+	// Putting the name in the correct order
+	for (int index = 0; index < reversedString.length(); index++)
+	{
+		returnVal = returnVal + reversedString[reversedString.length() - index];
+	}
 
 	// TEST OUTPUT
-    //cout << returnVal << endl;
+	// cout << returnVal << endl;
 
-    return returnVal.c_str();
+	return returnVal.c_str();
 }
-
 
 string File::getFileType()
 {
 	// just return the thing
-
 }
 
 // Analyses the file generated by the File class constructor and returns a string with the correct file type
-string parseFileData(fstream& fileInfoParam)
+string parseFileData(fstream &fileInfoParam)
 {
 	string fileDataStr = "";
 	getline(fileInfoParam, fileDataStr);
 
 	if (fileDataStr.find("PNG image data", 0) != string::npos)
 	{
-		//cout << "test1" << endl;
+		// cout << "test1" << endl;
 		fileDataStr = "png";
 	}
 
 	else if (fileDataStr.find("JPEG image data", 0) != string::npos)
 	{
-		//cout << "test2" << endl;
+		// cout << "test2" << endl;
 		fileDataStr = "jpeg";
 	}
 
 	else if (fileDataStr.find("ASCII text", 0) != string::npos)
 	{
-		//cout << "test3" << endl;
+		// cout << "test3" << endl;
 		fileDataStr = "txt";
 	}
 
 	else if (fileDataStr.find("Audio file with ID3", 0) != string::npos)
 	{
-		//cout << "test4" << endl;
+		// cout << "test4" << endl;
 		fileDataStr = "mp3";
 	}
 
 	else if (fileDataStr.find("ISO Media, MP4", 0) != string::npos)
 	{
-		//cout << "test5" << endl;
+		// cout << "test5" << endl;
 		fileDataStr = "mp4";
 	}
 
-	else 
+	else
 	{
 		cout << "undetected" << endl;
 	}

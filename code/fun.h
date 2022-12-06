@@ -134,4 +134,35 @@ class File : public Item
 		// -------------------------------------------
 };
 // --------------------------------------------------------------------
+
+class ImageFile : public File				
+{	
+	public:
+		// constructors/destructor -------------------
+		ImageFile(filesystem::path initPath);
+		~ImageFile() {};
+		// -------------------------------------------
+
+		// setter ------------------------------------
+		virtual void setIcon() override;
+		// -------------------------------------------
+
+		// getter ------------------------------------
+		virtual itemInfo getInfo() const override;
+		// -------------------------------------------
+
+		// void --------------------------------------
+		string getFileType();
+		virtual void openItem() const override;
+		// -------------------------------------------
+	
+	protected:
+		// attributes --------------------------------
+		string fileType;
+		// -------------------------------------------
+};
+
+
+
+
 #endif 
