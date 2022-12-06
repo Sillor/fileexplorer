@@ -17,7 +17,7 @@ int main()
 	cout << endl << endl << "------------------" << endl << endl;
 
 
-	filesystem::path currentDir = "/home/r/Desktop/testDir2";	// Set this directory to be something on your computer		
+	filesystem::path currentDir = "/home/admin/Desktop/testDir";	// Set this directory to be something on your computer		
 	Directory testDir(currentDir);
 
 	testDir.populate();
