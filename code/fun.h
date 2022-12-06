@@ -18,6 +18,8 @@ struct itemInfo
 	string location;
 	Texture icon;
 	Texture* iconPtr;
+
+	bool resizeNeeded = false;
 	
 };
 
@@ -32,6 +34,7 @@ filesystem::path getPath();
 string parseFileData(fstream& fileInfoParam);
 
 char* getNameFromFullPath_CStr(string pathParam);
+bool thumbAlreadyExists(string folder, string file);
 // --------------------------------------------------------------------
 
 // CLASSES

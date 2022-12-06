@@ -115,10 +115,11 @@ Sprite File::resizeSprite(Sprite& spriteParam)
 	// -----------------------------------------------------------------------------------------
 
 	// determining if a directory named ".file_explorer_thumbs" is present , making it if not --
-	bool thumbsFolderPresent = false;
+	
+	bool thumbsFolderPresent = false; 
 	for (auto & thing : filesystem::directory_iterator(pathStr))
 	{
-		cout << thing << endl;
+		//cout << thing << endl;
 		string stringToSearch = thing.path();
 		if (stringToSearch.find(".file_explorer_thumbs", 0) != string::npos  )
 		{
@@ -127,6 +128,7 @@ Sprite File::resizeSprite(Sprite& spriteParam)
 		}
 	}
 	cout << "DONE" << endl;
+	
 
 	// creating the directory if it does not already exist
 	if (thumbsFolderPresent == false)
@@ -162,7 +164,7 @@ Sprite File::resizeSprite(Sprite& spriteParam)
 		command2 += " && ";
 		command2 += "convert ";
 		//command2 += "\"";
-		string name = getNameFromFullPath(thing.path());
+		string name = getNameFromFullPath(thing.path());		// this one or maybe something else was getting concatenated onto name, but then c_string() would only return up to 'convert.' something to do with null terminators I think
 		command2 += thing.path().c_str();
 		//command2 += name;
 		//command2 += "\"";
@@ -190,8 +192,6 @@ Sprite File::resizeSprite(Sprite& spriteParam)
 		//command2 += "\"";
 		*/
 
-		if (commandX == command2)
-			cout << "THEYRE TGHE SQME " << endl;
 		
 
 		/*
@@ -208,22 +208,38 @@ Sprite File::resizeSprite(Sprite& spriteParam)
 		//command2 += "\"";
 		*/
 		
-		cout << "COMMAND X: " << commandX.c_str() << endl << endl;
-		cout << "COMMAND 2 C String: " << command2.c_str() << endl << endl;
-		cout << "COMMAND 2: " << command2 << endl << endl;
-		system(command2.c_str());
+		//cout << "COMMAND X: " << commandX.c_str() << endl << endl;
+		//cout << "COMMAND 2 C String: " << command2.c_str() << endl << endl;
+		//cout << "COMMAND 2: " << command2 << endl << endl;
+
+		bool exists = true;
+		string fileToCheckStr = thing.path().filename();
+		if (fileToCheckStr.substr(0, 14) != ".file_explorer") 
+		{
+			exists = thumbAlreadyExists(pathStr, fileToCheckStr);		// TURN BACK ON
+		}
+
+		static bool goAgain = true;
+		if (!exists && goAgain == true)
+		{
+			system(command2.c_str());
+			//cout << thing.path().filename() << " THUMB DOES NOT EXIST" << endl;
+			goAgain = false;
+		}
+		/*
+		else if ( thumbAlreadyExists( pathStr, thing.path().filename() ) )
+		{
+			cout << thing.path().filename() << " THUMB EXISTS" << endl;
+		}
+		*/
+		
 		
 
 		//string command3 = "convert ";
 		//command3 += 
 	}
-	
 
-	
 	// while...
-	
-	
-	
 	
 	 /* while (spriteParam.getGlobalBounds().width > 110)
 	{
@@ -256,6 +272,29 @@ Sprite File::resizeSprite(Sprite& spriteParam)
 	
 	return spriteParam;
 }
+
+	// thumbAlreadyExists(pathStr, thing.path().filename())
+	bool thumbAlreadyExists(string folder, string file)
+	{
+		bool exists = false;
+		string prefixToDetect = ".file_explorer_thumb_";
+		string stringToDetect = prefixToDetect + file;
+		//cout << "STRING TO DETECT IN FOLDER:" << stringToDetect << endl;		// GOOD
+
+		for (auto & suspect : filesystem::directory_iterator(folder))
+		{
+			string suspectStr = suspect.path().filename();
+			//cout << "\t" << "suspect: " << suspectStr << endl;	// shows the suspects
+			if (suspectStr == stringToDetect)
+			{
+				exists = true;
+				//cout << "FOUND" << endl;
+				return exists;
+			}
+		}
+
+		return exists;
+	}
 
 //bool checkForThumbsFolder()
 //{
