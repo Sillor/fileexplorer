@@ -114,6 +114,12 @@ int main()
 				}
 			}
 
+			// Rowans part
+			if (event.type = Event::MouseButtonPressed)
+			{
+					//cout << "Elephatns" << endl;
+			}
+
 		}
 		
 

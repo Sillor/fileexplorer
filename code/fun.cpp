@@ -9,6 +9,25 @@
 // FUNCTION DEFS
 // --------------------------------------------------------------------
 
+coordInfo calculateSquare(int xPos, int yPos)
+{
+	coordInfo returnSq;
+
+	returnSq.topLeft.x = xPos;
+	returnSq.topLeft.y = yPos;
+
+	returnSq.bottomLeft.x = xPos;
+	returnSq.bottomLeft.y = yPos + 91;
+
+	returnSq.topRight.x = xPos + 91;
+	returnSq.topRight.y =  yPos;
+
+	returnSq.bottomRight.x = xPos + 91;
+	returnSq.bottomRight.y = yPos + 91;
+
+	return returnSq;
+}
+
 void Directory::displayContents(RenderWindow &windowParam, RectangleShape &background, View &mainView)
 {
 	// adjusting the view to be same as window size
@@ -34,7 +53,7 @@ void Directory::displayContents(RenderWindow &windowParam, RectangleShape &backg
 			xPos = subIndex + 300;
 			gridCoords.push_back(Vector2f(xPos, yPos + 45));						// ZEBRAS
 
-			//coordInfo itemSquare = calculateSquare(itemSquare);
+			coordInfo itemSquare = calculateSquare(xPos, yPos + 45);
 
 			//coordinates.at(index) = itemSquare;
 

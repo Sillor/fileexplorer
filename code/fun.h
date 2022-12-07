@@ -37,6 +37,8 @@ string parseFileData(fstream& fileInfoParam);
 char* getNameFromFullPath_CStr(string pathParam);
 bool thumbAlreadyExists(string folder, string file);
 string getTitle(string titleParam);
+
+
 // --------------------------------------------------------------------
 
 // CLASSES
@@ -81,18 +83,21 @@ class Item
 struct coordInfo
 {
 	Vector2f topLeft; // = x + y
-	int bottomLeft; // add 91 to y
-	int topRight;    // add 91 to x
-	int bottomRight; // add 91 to both
+	Vector2f bottomLeft; // add 91 to y
+	Vector2f topRight;    // add 91 to x
+	Vector2f bottomRight; // add 91 to both
 
-	Item* thing;
+	//Item* thing;
 };
+
+
+coordInfo calculateSquare(int xPos, int yPos);		// LEAVE HERE
 
 class Directory : public Item
 {
 	public:
 		// constructors/destructor -----------------------------------
-		Directory(filesystem::path initPath) : Item(initPath)  {}
+		Directory(filesystem::path initPath) : Item(initPath)  {coordinates.resize(1000); }
 		~Directory() {};
 		// -----------------------------------------------------------
 
@@ -100,6 +105,7 @@ class Directory : public Item
 		void populate();										// collects the things stored in the directory and saves them in the vector variable "location"
 		virtual void setIcon() override;
 		void setPath(string param) {location = param; info.location = param; contents.clear(); }
+		void emptyCoordList() {coordinates.clear(); }
 		// ----------------------------------
 
 		// getter ---------------------------
