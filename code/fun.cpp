@@ -317,8 +317,8 @@ void ImageFile::openItem() const
 
 void AudioFile::openItem() const 
 {
-	string command = "mpv ";
-	command += info.location;
+	string command = "vlc ";
+	command += location.c_str();
 
 	system(command.c_str());
 }
@@ -326,14 +326,21 @@ void AudioFile::openItem() const
 void VideoFile::openItem() const
 {
 	string command = "mpv ";
-	command += info.location;
+	command += location.c_str();
+	cout << "COMMAND" << command << endl;
 
 	system(command.c_str());
 
 }
 
 void TextFile::openItem() const
-{}
+{
+	string command = "gedit ";
+	command += location.c_str();
+	cout << "COMMAND" << command << endl;
+
+	system(command.c_str());
+}
 
 void Directory::populate()
 {
