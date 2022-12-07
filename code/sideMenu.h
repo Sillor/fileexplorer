@@ -2,6 +2,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "button.h"
+#include "fun.h"
 using namespace std;
 using namespace sf;
 
@@ -45,6 +46,46 @@ public:
     string getButtonName(int index)
     {
         return names[index];
+    }
+    void buttonClick(RenderWindow &window, Directory &currentDisplayingDirectory, string USERNAME)
+    { 
+        for (int i = 0; i < 7; i++)
+        {
+            if (SideMenu::getButton(i).isMouseOver(window))
+            {
+                cout << "sideButton " << i << " pressed" << endl;
+                SideMenu::setButtonColor(i, Color{ 0x142238FF });
+            }
+        }
+
+        for (int i = 1; i < 7; i++)
+        {
+            if (SideMenu::getButton(i).isMouseOver(window))
+            {
+                currentDisplayingDirectory.setPath("/home/" + USERNAME + "/" + SideMenu::getButtonName(i));
+                currentDisplayingDirectory.populate();
+            }
+        }
+
+        if (SideMenu::getButton(0).isMouseOver(window))
+        {
+            currentDisplayingDirectory.setPath("/home/" + USERNAME);
+            currentDisplayingDirectory.populate();
+        }
+    }
+    void mouseHover(RenderWindow &window)
+    {
+        for (int i = 0; i < 7; i++)
+        {
+            if (SideMenu::getButton(i).isMouseOver(window))
+            {
+                SideMenu::setButtonColor(i, Color{ 0x252933FF });
+            }
+            else
+            {
+                SideMenu::setButtonColor(i, Color{ 0x2A2f3AFF });
+            }
+        }
     }
 
 private:

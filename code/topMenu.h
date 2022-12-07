@@ -42,6 +42,31 @@ public:
     {
         topMenuButtons[index]->setBackColor(color);
     }
+    void buttonClick(RenderWindow &window)
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            if (TopMenu::getButton(i).isMouseOver(window))
+            {
+                cout << "topButton " << i << " pressed" << endl;
+                TopMenu::setButtonColor(i, Color{ 0x142238FF });
+            }
+        }
+    }
+    void mouseHover(RenderWindow &window)
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            if (TopMenu::getButton(i).isMouseOver(window))
+            {
+                TopMenu::setButtonColor(i, Color{ 0x252933FF });
+            }
+            else
+            {
+                TopMenu::setButtonColor(i, Color{ 0x2A2f3AFF });
+            }
+        }
+    }
 
 private:
     string names[6] = { "New", "Open", "Rename", "Copy", "Paste", "Delete" };

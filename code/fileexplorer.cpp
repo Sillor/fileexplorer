@@ -11,7 +11,7 @@ using namespace sf;
 using namespace std;
 
 
-const string USERNAME = "admin";
+const string USERNAME = "egor";
 
 int main()
 {
@@ -60,58 +60,14 @@ int main()
 
 			if (event.type == Event::MouseButtonPressed) //if mouse pressed change color of button
 			{
-				for (int i = 0; i < 6; i++)
-				{
-					if (topMenu.getButton(i).isMouseOver(window))
-					{
-						cout << "topButton " << i << " pressed" << endl;
-						topMenu.setButtonColor(i, Color{ 0x142238FF });
-					}
-				}
-				for (int i = 0; i < 7; i++)
-				{
-					if (sideMenu.getButton(i).isMouseOver(window))
-					{
-						cout << "sideButton " << i << " pressed" << endl;
-						sideMenu.setButtonColor(i, Color{ 0x142238FF });
-					}
-				}
-
-				for (int i = 1; i < 7; i++)
-				{
-					if (sideMenu.getButton(i).isMouseOver(window))
-					{
-						currentDir = "/home/" + USERNAME + "/" + sideMenu.getButtonName(i);
-						cout << currentDir << endl;
-					}
-				}
+				topMenu.buttonClick(window);				
+				sideMenu.buttonClick(window, currentDisplayingDirectory, USERNAME);
 			}
 
 			if (event.type == Event::MouseMoved) //if mouse moved over button change color of the button
 			{
-				for (int i = 0; i < 6; i++)
-				{
-					if (topMenu.getButton(i).isMouseOver(window))
-					{
-						topMenu.setButtonColor(i, Color{ 0x252933FF });
-					}
-					else
-					{
-						topMenu.setButtonColor(i, Color{ 0x2A2f3AFF });
-					}
-				}
-
-				for (int i = 0; i < 7; i++)
-				{
-					if (sideMenu.getButton(i).isMouseOver(window))
-					{
-						sideMenu.setButtonColor(i, Color{ 0x252933FF });
-					}
-					else
-					{
-						sideMenu.setButtonColor(i, Color{ 0x2A2f3AFF });
-					}
-				}
+				topMenu.mouseHover(window);
+				sideMenu.mouseHover(window);
 			}
 
 			// Rowans part
