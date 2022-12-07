@@ -178,14 +178,14 @@ void Directory::setIcon()
 
 void File::setIcon()
 {
-	info.iconPtr = new Texture; // This causes a memory leak if you run it long enough?
+	info.iconPtr = new Texture; 
 	info.iconPtr->loadFromFile("images/folder.png");
 	// textureIcons.push_back(info.iconPtr);
 }
 
 void ImageFile::setIcon()
 {
-	info.iconPtr = new Texture; // This causes a memory leak if you run it long enough?
+	info.iconPtr = new Texture; 
 	//info.iconPtr->loadFromFile("/home/admin/Desktop/Capture_decran_du_2022-12-04_00-41-38.png");
 	info.iconPtr->loadFromFile("images/image.png");
 
@@ -193,19 +193,19 @@ void ImageFile::setIcon()
 
 void TextFile::setIcon() 
 {
-	info.iconPtr = new Texture; // This causes a memory leak if you run it long enough?
+	info.iconPtr = new Texture; 
 	info.iconPtr->loadFromFile("images/txt.png");
 }
 
 void AudioFile::setIcon()
 {
-	info.iconPtr = new Texture; // This causes a memory leak if you run it long enough?
+	info.iconPtr = new Texture; 
 	info.iconPtr->loadFromFile("/images/audio.png");
 }
 
 void VideoFile::setIcon()
 {
-	info.iconPtr = new Texture; // This causes a memory leak if you run it long enough?
+	info.iconPtr = new Texture; 
 	info.iconPtr->loadFromFile("images/vid.png");
 }
 
@@ -307,7 +307,13 @@ void File::openItem() const
 }
 
 void ImageFile::openItem() const
-{}
+{
+	string command = "eog ";
+	command += info.location;
+
+	system(command.c_str());
+
+}
 
 void AudioFile::openItem() const 
 {}

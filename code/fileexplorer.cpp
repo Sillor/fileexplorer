@@ -119,28 +119,24 @@ int main()
 								cout << "ERROR 11" << endl;
 							}
 						}
+						else 
+						{
+							currentDisplayingDirectory.getContents().at(counter)->openItem();
+						}
 					}
 					counter++;
 				}
 			}
 		}
-
 		if (wait == false || window.getSize() != currentWindowSize)
 		{
-
 			window.clear();
 			// window.draw(background);
 			currentDisplayingDirectory.displayContents(window, background, mainView);
 			sideMenu.drawTo(window); // draw side menu
 			topMenu.drawTo(window);	 // draw top menu
-
-			// CircleShape shape(50);
-			// shape.setFillColor(sf::Color(100, 250, 50));
-			// window.draw(shape);
-
 			window.display();
 			wait = true;
-			// testDir.cleanTexture();
 		}
 		usleep(50000);
 	}
