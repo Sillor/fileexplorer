@@ -29,10 +29,10 @@ void Directory::displayContents(RenderWindow &windowParam, RectangleShape &backg
 	int xPos = 0;
 	for (int index = 0; index < verticalWidth; index = index + 120)
 	{
-		for (int subIndex = 0; subIndex < (horizontalWidth - 120); subIndex = subIndex + 120)
+		for (int subIndex = 0; subIndex < (horizontalWidth - 120 - 300); subIndex = subIndex + 120)
 		{
-			xPos = subIndex;
-			gridCoords.push_back(Vector2f(xPos, yPos));
+			xPos = subIndex + 300;
+			gridCoords.push_back(Vector2f(xPos, yPos + 45));
 
 			// cout << "subIndex:  " << (subIndex) << endl;
 			// cout << "horizontalWidth: " << horizontalWidth << endl;
@@ -41,6 +41,7 @@ void Directory::displayContents(RenderWindow &windowParam, RectangleShape &backg
 
 		xPos = 0;
 		yPos = index + 120;
+		//yPos += 300;
 		gridCoords.push_back(Vector2f(xPos, yPos));
 	}
 
@@ -59,20 +60,24 @@ void Directory::displayContents(RenderWindow &windowParam, RectangleShape &backg
 
 		try
 		{
+			//gridCoords.at(index).x += 300;
 			tempSprite.setPosition(gridCoords.at(index));
 			// and then save the coords permanently
+			//iconScreenCoords.x += 300;
 			iconScreenCoords = gridCoords.at(index);
 			windowParam.draw(tempSprite);
 			
 			// text box
 			Text text;
-			text.setString("test");
+			string title = getTitle(contents.at(index)->getInfo().location);
+			text.setString(title);
 			Font font;
 			text.setFillColor(Color(0, 0, 0));
 			font.loadFromFile("fonts/Ubuntu-Light.ttf"); // light font for buttons
 			text.setFont(font);
 			Vector2f textScreenCoords(0.0, 0.0);
 			textScreenCoords = iconScreenCoords;
+			textScreenCoords.x += 20; textScreenCoords.y -= 20;
 			float differential = 91.0;
 			textScreenCoords.y = (iconScreenCoords.y + differential);
 			text.setPosition(textScreenCoords);
@@ -87,6 +92,15 @@ void Directory::displayContents(RenderWindow &windowParam, RectangleShape &backg
 
 	// delete info.iconPtr;
 	// info.iconPtr = nullptr;
+}
+
+string getTitle(string titleParam)
+{
+	titleParam = getNameFromFullPath(titleParam);
+	//cout << "TITLE: " << titleParam << endl;
+	titleParam = titleParam.substr(0, 5);
+	titleParam += "...";
+	return titleParam;
 }
 
 void Directory::setIcon()
@@ -106,25 +120,27 @@ void File::setIcon()
 void ImageFile::setIcon()
 {
 	info.iconPtr = new Texture; // This causes a memory leak if you run it long enough?
-	info.iconPtr->loadFromFile("/home/admin/Desktop/Capture_decran_du_2022-12-04_00-41-38.png");
+	//info.iconPtr->loadFromFile("/home/admin/Desktop/Capture_decran_du_2022-12-04_00-41-38.png");
+	info.iconPtr->loadFromFile("images/image.png");
+
 }
 
 void TextFile::setIcon() 
 {
 	info.iconPtr = new Texture; // This causes a memory leak if you run it long enough?
-	info.iconPtr->loadFromFile("/home/admin/Desktop/Capture_decran_du_2022-12-04_00-41-38.png");
+	info.iconPtr->loadFromFile("images/txt.png");
 }
 
 void AudioFile::setIcon()
 {
 	info.iconPtr = new Texture; // This causes a memory leak if you run it long enough?
-	info.iconPtr->loadFromFile("/home/admin/Desktop/Capture_decran_du_2022-12-04_00-41-38.png");
+	info.iconPtr->loadFromFile("/images/audio.png");
 }
 
 void VideoFile::setIcon()
 {
 	info.iconPtr = new Texture; // This causes a memory leak if you run it long enough?
-	info.iconPtr->loadFromFile("/home/admin/Desktop/Capture_decran_du_2022-12-04_00-41-38.png");
+	info.iconPtr->loadFromFile("images/vid.png");
 }
 
 File::File(filesystem::path initPath) : Item(initPath)
