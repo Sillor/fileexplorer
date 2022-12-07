@@ -11,7 +11,7 @@ using namespace sf;
 using namespace std;
 
 
-
+const string USERNAME = "egor";
 
 int main()
 {
@@ -26,11 +26,11 @@ int main()
 	SideMenu sideMenu;
 	sideMenu.setFont(regularFont);
 
-	filesystem::path currentDir = "/home/admin/Desktop/fileexplorer";	// Set this directory to be something on your computer		
-	Directory testDir(currentDir);
+	filesystem::path currentDir = "/home/" + USERNAME + "/Desktop";	// Set this directory to be something on your computer		
+	Directory currentDisplayingDirectory(currentDir);
 
-	testDir.populate();
-	testDir.printContents();
+	currentDisplayingDirectory.populate();
+	currentDisplayingDirectory.printContents();
 
 	// SFML set-up
 	// --------------------------------------------------------------------
@@ -76,6 +76,15 @@ int main()
 						sideMenu.setButtonColor(i, Color{ 0x142238FF });
 					}
 				}
+
+				for (int i = 1; i < 7; i++)
+				{
+					if (sideMenu.getButton(i).isMouseOver(window))
+					{
+						currentDir = "/home/" + USERNAME + "/" + sideMenu.getButtonName(i);
+						cout << currentDir << endl;
+					}
+				}
 			}
 
 			if (event.type == Event::MouseMoved) //if mouse moved over button change color of the button
@@ -113,7 +122,7 @@ int main()
 			
 			window.clear();
 			//window.draw(background);			
-			testDir.displayContents(window, background, mainView);
+			currentDisplayingDirectory.displayContents(window, background, mainView);
 			sideMenu.drawTo(window); //draw side menu
 			topMenu.drawTo(window); //draw top menu
 
