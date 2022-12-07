@@ -88,16 +88,28 @@ void File::setIcon()
 }
 
 void ImageFile::setIcon()
-{}
+{
+	info.iconPtr = new Texture; // This causes a memory leak if you run it long enough?
+	info.iconPtr->loadFromFile("/home/admin/Desktop/Capture_decran_du_2022-12-04_00-41-38.png");
+}
 
 void TextFile::setIcon() 
-{}
+{
+	info.iconPtr = new Texture; // This causes a memory leak if you run it long enough?
+	info.iconPtr->loadFromFile("/home/admin/Desktop/Capture_decran_du_2022-12-04_00-41-38.png");
+}
 
 void AudioFile::setIcon()
-{}
+{
+	info.iconPtr = new Texture; // This causes a memory leak if you run it long enough?
+	info.iconPtr->loadFromFile("/home/admin/Desktop/Capture_decran_du_2022-12-04_00-41-38.png");
+}
 
 void VideoFile::setIcon()
-{}
+{
+	info.iconPtr = new Texture; // This causes a memory leak if you run it long enough?
+	info.iconPtr->loadFromFile("/home/admin/Desktop/Capture_decran_du_2022-12-04_00-41-38.png");
+}
 
 File::File(filesystem::path initPath) : Item(initPath)
 {
@@ -118,6 +130,7 @@ File::File(filesystem::path initPath) : Item(initPath)
 
 ImageFile::ImageFile(filesystem::path initPath) : File(initPath)
 {
+	/*
 	string pathStr = getInfo().location;
 	string command = ""; // command to pass to system() to get the file type info
 	string quotes = "\"";
@@ -131,6 +144,7 @@ ImageFile::ImageFile(filesystem::path initPath) : File(initPath)
 	}
 
 	fileType = parseFileData(fileInfo);
+	*/
 }
 
 AudioFile::AudioFile(filesystem::path initPath) : File(initPath)
@@ -251,13 +265,15 @@ void Directory::populate()
 			// only do that if the file type cannot be determined.
 			Item *tempPtr2 = new File(file.path());
 
+			
+
 			string fileType = tempPtr2->getInfo().fileType;
 			cout << "fileType: " << fileType << endl;
-			/*
+			
 			if (fileType == "jpeg" || fileType == "png")
 			{
 				Item* tempPtr3 = new ImageFile(file.path());
-				contents.push_back(tempPtr3);
+				contents.push_back(tempPtr3);			// seg error here
 				delete tempPtr2;
 			}
 			
@@ -286,12 +302,12 @@ void Directory::populate()
 			{
 				contents.push_back(tempPtr2);
 			}
-
+			
 			else 
 			{
 				contents.push_back(tempPtr2);
 			}
-			*/
+		
 
 			
 
