@@ -22,7 +22,7 @@ int main()
 	topMenu.loadVector(); //probably better move into constructor
 	topMenu.setFont(font);
 
-	filesystem::path currentDir = "testDir";	// Set this directory to be something on your computer		
+	filesystem::path currentDir = "/home/admin/Desktop/fileexplorer";	// Set this directory to be something on your computer		
 	Directory testDir(currentDir);
 
 	testDir.populate();

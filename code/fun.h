@@ -57,7 +57,7 @@ class Item
 		// getter -----------------------
 		filesystem::path getPath() const;						// returns a filesystem::path object for the thing
 		virtual itemInfo getInfo() const = 0;		// returns the full path on the filesystem of the thing and the file type
-		Vector2i getIconScreenCoords() const {};
+		Vector2f getIconScreenCoords() const {};
 		// ------------------------------
 
 		// void -------------------------
@@ -68,7 +68,7 @@ class Item
 		// attributes -------------------
 		filesystem::path location;								// filesystem::path object for the item
 		Texture icon;
-		Vector2i iconScreenCoords;
+		Vector2f iconScreenCoords;
 
 		itemInfo info;
 

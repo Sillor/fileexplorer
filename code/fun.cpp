@@ -13,7 +13,7 @@ void Directory::displayContents(RenderWindow &windowParam, RectangleShape &backg
 {
 	// adjusting the view to be same as window size
 	Vector2f size = static_cast<Vector2f>(windowParam.getSize());
-	mainView = View(FloatRect(0.f, 0.f, size.x, size.y)); // what does the .f do??
+	mainView = View(FloatRect(0.f, 0.f, size.x, size.y));
 	windowParam.setView(mainView);
 
 	windowParam.draw(background);
@@ -60,7 +60,23 @@ void Directory::displayContents(RenderWindow &windowParam, RectangleShape &backg
 		try
 		{
 			tempSprite.setPosition(gridCoords.at(index));
+			// and then save the coords permanently
+			iconScreenCoords = gridCoords.at(index);
 			windowParam.draw(tempSprite);
+			
+			// text box
+			Text text;
+			text.setString("test");
+			Font font;
+			text.setFillColor(Color(0, 0, 0));
+			font.loadFromFile("fonts/Ubuntu-Light.ttf"); // light font for buttons
+			text.setFont(font);
+			Vector2f textScreenCoords(0.0, 0.0);
+			textScreenCoords = iconScreenCoords;
+			float differential = 91.0;
+			textScreenCoords.y = (iconScreenCoords.y + differential);
+			text.setPosition(textScreenCoords);
+			windowParam.draw(text);
 
 			contents.at(index)->cleanTexture();
 		}
