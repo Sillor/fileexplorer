@@ -36,7 +36,7 @@ int main()
 
 	// SFML set-up
 	// --------------------------------------------------------------------
-	Vector2i defaultWindowSize(3840, 2160);
+	Vector2i defaultWindowSize(3840, 2160 /*1920, 1080*/);
 	VideoMode vm(defaultWindowSize.x, defaultWindowSize.y);
 	RenderWindow window(vm, "File Explorer", Style::Resize);
 	Event event;
@@ -72,7 +72,13 @@ int main()
 				sideMenu.mouseHover(window);
 			}
 
-			// Rowans part
+			// more below
+
+			if (Keyboard::isKeyPressed(Keyboard::Return))
+			{
+				currentDisplayingDirectory.setPath(returnParentDirStr(currentDisplayingDirectory.getPath()));
+				currentDisplayingDirectory.populate();
+			}
 
 			if (event.type == Event::MouseButtonPressed)
 			{
@@ -94,20 +100,25 @@ int main()
 					// if (mousePos.x > element.bottomLeft.x && mousePos.y bottomLeft.y)
 					if (mousePos.x <= element.topRight.x && mousePos.x >= element.topLeft.x && mousePos.y >= element.topRight.y && mousePos.y <= element.bottomLeft.y)
 					{
-						cout << currentDisplayingDirectory.getContents().at(counter)->getInfo().location << endl;
+						try {cout << currentDisplayingDirectory.getContents().at(counter)->getInfo().location << endl;} catch(out_of_range& ex){cout << "ERROR 10" << endl;}
 
 						if (filesystem::is_directory(currentDisplayingDirectory.getContents().at(counter)->getPath()))
 						{
 							//Item tempDirectory = *currentDisplayingDirectory.getContents().at(counter);
+							
+							
 							Directory tempDir(currentDisplayingDirectory.getContents().at(counter)->getPath());
 							currentDisplayingDirectory = tempDir;
 							currentDisplayingDirectory.populate();
-							cout << currentDisplayingDirectory.getContents().at(counter)->getPath() << endl;
+							break;
+							try {
+							cout << currentDisplayingDirectory.getContents().at(counter)->getPath() << endl;		//out of range errror
+							}
+							catch(out_of_range& exception)
+							{
+								cout << "ERROR 11" << endl;
+							}
 						}
-						 //currentDisplayingDirectory = *currentDisplayingDirectory.getContents().at(counter);
-						//Item* thingy = currentDisplayingDirectory.getContents().at(counter);
-						//currentDisplayingDirectory = thingy;
-
 					}
 					counter++;
 				}

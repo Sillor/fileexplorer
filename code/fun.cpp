@@ -9,6 +9,24 @@
 // FUNCTION DEFS
 // --------------------------------------------------------------------
 
+string returnParentDirStr(string currentPath)
+{
+	string newStr = currentPath;
+
+	int index = newStr.length() - 1;
+	while (currentPath[index] != '/')
+	{
+		cout << "current str: " << newStr << endl;
+		newStr = newStr.substr(0, newStr.length() - 1);
+		cout << "new str: " << newStr << endl;
+		cout << endl;
+		index--;
+	}	
+	//cout << "new string: " << newStr << endl;
+
+	return newStr;
+}
+
 coordInfo calculateSquare(int xPos, int yPos)
 {
 	coordInfo returnSq;
@@ -99,7 +117,7 @@ void Directory::displayContents(RenderWindow &windowParam, RectangleShape &backg
 
 	for (int index = 0; index < contents.size(); index++)
 	{
-		contents.at(index)->setIcon();
+		try { contents.at(index)->setIcon(); } catch(...) {cout << "ERROR 1" << endl; }
 
 		Sprite tempSprite;
 		tempSprite.setTexture(*contents.at(index)->getInfo().iconPtr);
@@ -107,15 +125,16 @@ void Directory::displayContents(RenderWindow &windowParam, RectangleShape &backg
 		try
 		{
 			//gridCoords.at(index).x += 300;
-			tempSprite.setPosition(gridCoords.at(index));
+			try { tempSprite.setPosition(gridCoords.at(index)); } catch(...) {cout << "ERROR 2" << endl; }
 			// and then save the coords permanently
 			//iconScreenCoords.x += 300;
-			iconScreenCoords = gridCoords.at(index);
+			try {iconScreenCoords = gridCoords.at(index); } catch(...) {cout << "ERROR 3" << endl; }
 			windowParam.draw(tempSprite);
 			
 			// text box
-			Text text;
-			string title = getTitle(contents.at(index)->getInfo().location);
+			Text text; 
+			string title;
+			title = getTitle(contents.at(index)->getInfo().location);			// why does this not work if i put in try block even if it succeeds
 			text.setString(title);
 			Font font;
 			text.setFillColor(Color(0, 0, 0));
@@ -129,10 +148,11 @@ void Directory::displayContents(RenderWindow &windowParam, RectangleShape &backg
 			text.setPosition(textScreenCoords);
 			windowParam.draw(text);
 
-			contents.at(index)->cleanTexture();
+			try {contents.at(index)->cleanTexture(); } catch(...) {cout << "ERROR 4" << endl;}
 		}
 		catch (out_of_range &outOfRangeException)
 		{
+			cout << "ERROR 5" << endl;
 		}
 	}
 

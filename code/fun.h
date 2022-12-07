@@ -37,6 +37,7 @@ string parseFileData(fstream& fileInfoParam);
 char* getNameFromFullPath_CStr(string pathParam);
 bool thumbAlreadyExists(string folder, string file);
 string getTitle(string titleParam);
+string returnParentDirStr(string currentPath);
 
 
 // --------------------------------------------------------------------
