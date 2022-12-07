@@ -73,6 +73,20 @@ public:
             currentDisplayingDirectory.populate();
         }
     }
+    void mouseHover(RenderWindow &window)
+    {
+        for (int i = 0; i < 7; i++)
+        {
+            if (SideMenu::getButton(i).isMouseOver(window))
+            {
+                SideMenu::setButtonColor(i, Color{ 0x252933FF });
+            }
+            else
+            {
+                SideMenu::setButtonColor(i, Color{ 0x2A2f3AFF });
+            }
+        }
+    }
 
 private:
     string names[7] = { "Home", "Desktop", "Documents", "Downloads", "Music", "Pictures", "Videos" };

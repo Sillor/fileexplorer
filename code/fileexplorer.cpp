@@ -66,29 +66,8 @@ int main()
 
 			if (event.type == Event::MouseMoved) //if mouse moved over button change color of the button
 			{
-				for (int i = 0; i < 6; i++)
-				{
-					if (topMenu.getButton(i).isMouseOver(window))
-					{
-						topMenu.setButtonColor(i, Color{ 0x252933FF });
-					}
-					else
-					{
-						topMenu.setButtonColor(i, Color{ 0x2A2f3AFF });
-					}
-				}
-
-				for (int i = 0; i < 7; i++)
-				{
-					if (sideMenu.getButton(i).isMouseOver(window))
-					{
-						sideMenu.setButtonColor(i, Color{ 0x252933FF });
-					}
-					else
-					{
-						sideMenu.setButtonColor(i, Color{ 0x2A2f3AFF });
-					}
-				}
+				topMenu.mouseHover(window);
+				sideMenu.mouseHover(window);
 			}
 
 		}
