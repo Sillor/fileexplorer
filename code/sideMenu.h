@@ -42,9 +42,14 @@ public:
     {
         sideMenuButtons[index]->setBackColor(color);
     }
+    string getButtonName(int index)
+    {
+        return names[index];
+    }
 
 private:
     string names[7] = { "Home", "Desktop", "Documents", "Downloads", "Music", "Pictures", "Videos" };
+    string paths[7] = { "/home", "/home/Desktop", "/home/Documents", "/home/Downloads", "/home/Music", "/home/Pictures", "/home/Videos"};
     vector<SideButton*> sideMenuButtons;   
     RectangleShape backgroundStrip;
 };
