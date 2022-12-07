@@ -68,7 +68,7 @@ void Directory::displayContents(RenderWindow &windowParam, RectangleShape &backg
 			{
 				//cout << coordinates.size() << endl;
 			}
-			cout << coordinates.size() << endl;
+			//cout << coordinates.size() << endl;
 
 			// cout << "subIndex:  " << (subIndex) << endl;
 			// cout << "horizontalWidth: " << horizontalWidth << endl;

@@ -110,6 +110,7 @@ class Directory : public Item
 
 		// getter ---------------------------
 		virtual itemInfo getInfo() const override;
+		vector<coordInfo> getCoordinates() { return coordinates; }
 		// ----------------------------------
 
 		// void -----------------------------
