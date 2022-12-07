@@ -18,6 +18,8 @@ struct itemInfo
 	string location;
 	Texture icon;
 	Texture* iconPtr;
+
+	bool resizeNeeded = false;
 	
 };
 
@@ -30,6 +32,9 @@ string getNameFromFullPath(string pathParam);
 //void populateDirectory(Directory& directoryParam);
 filesystem::path getPath();
 string parseFileData(fstream& fileInfoParam);
+
+char* getNameFromFullPath_CStr(string pathParam);
+bool thumbAlreadyExists(string folder, string file);
 // --------------------------------------------------------------------
 
 // CLASSES
@@ -129,4 +134,35 @@ class File : public Item
 		// -------------------------------------------
 };
 // --------------------------------------------------------------------
+
+class ImageFile : public File				
+{	
+	public:
+		// constructors/destructor -------------------
+		ImageFile(filesystem::path initPath);
+		~ImageFile() {};
+		// -------------------------------------------
+
+		// setter ------------------------------------
+		virtual void setIcon() override;
+		// -------------------------------------------
+
+		// getter ------------------------------------
+		virtual itemInfo getInfo() const override;
+		// -------------------------------------------
+
+		// void --------------------------------------
+		string getFileType();
+		virtual void openItem() const override;
+		// -------------------------------------------
+	
+	protected:
+		// attributes --------------------------------
+		string fileType;
+		// -------------------------------------------
+};
+
+
+
+
 #endif 
