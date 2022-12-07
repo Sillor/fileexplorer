@@ -11,7 +11,7 @@ using namespace sf;
 using namespace std;
 
 
-const string USERNAME = "admin";
+const string USERNAME = "egor";
 
 int main()
 {
@@ -87,6 +87,14 @@ int main()
 						cout << currentDir << endl;
 					}
 				}
+
+				if (sideMenu.getButton(0).isMouseOver(window))
+					{
+						currentDir = "/home/" + USERNAME;
+						currentDisplayingDirectory.setPath(currentDir);
+						currentDisplayingDirectory.populate();
+						cout << currentDir << endl;
+					}
 			}
 
 			if (event.type == Event::MouseMoved) //if mouse moved over button change color of the button
