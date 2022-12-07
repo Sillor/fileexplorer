@@ -36,6 +36,10 @@ public:
     {
         return *topMenuButtons[index];
     }
+    void setButtonColor(int index, Color color)
+    {
+        topMenuButtons[index]->setBackColor(color);
+    }
 
 private:
     string names[6] = { "New", "Open", "Rename", "Copy", "Paste", "Delete" };

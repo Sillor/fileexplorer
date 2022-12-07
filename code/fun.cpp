@@ -46,9 +46,9 @@ void Directory::displayContents(RenderWindow &windowParam, RectangleShape &backg
 
 	for (auto thing : gridCoords)
 	{
-		cout << thing.x << "and " << thing.y;
+		//cout << thing.x << "and " << thing.y;
 		// cout << thing.y << endl;
-		cout << "\t";
+		//cout << "\t";
 	}
 
 	for (int index = 0; index < contents.size() - 1; index++)

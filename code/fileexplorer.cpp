@@ -5,7 +5,7 @@
 #include <fstream>
 #include <unistd.h>  
 #include "fun.h"
-
+#include "topMenu.h"
 using namespace sf;
 using namespace std;
 
@@ -16,6 +16,11 @@ int main()
 {
 	cout << endl << endl << "------------------" << endl << endl;
 
+	Font font;
+	font.loadFromFile("fonts/Ubuntu-Light.ttf"); // light font for buttons
+	TopMenu topMenu;
+	topMenu.loadVector(); //probably better move into constructor
+	topMenu.setFont(font);
 
 	filesystem::path currentDir = "testDir";	// Set this directory to be something on your computer		
 	Directory testDir(currentDir);
@@ -48,6 +53,34 @@ int main()
 			{
 				window.close();
 			}
+
+			if (event.type == Event::MouseButtonPressed) //if mouse pressed change color of button
+			{
+				for (int i = 0; i < 6; i++)
+				{
+					if (topMenu.getButton(i).isMouseOver(window))
+					{
+						cout << "Button " << i << " pressed" << endl;
+						topMenu.setButtonColor(i, Color{ 0x142238FF });
+					}
+				}
+			}
+
+			if (event.type == Event::MouseMoved) //if mouse moved over button change color of the button
+			{
+				for (int i = 0; i < 6; i++)
+				{
+					if (topMenu.getButton(i).isMouseOver(window))
+					{
+						topMenu.setButtonColor(i, Color{ 0x252933FF });
+					}
+					else
+					{
+						topMenu.setButtonColor(i, Color{ 0x2A2f3AFF });
+					}
+				}
+			}
+
 		}
 		
 
@@ -57,6 +90,7 @@ int main()
 			window.clear();
 			//window.draw(background);			
 			testDir.displayContents(window, background, mainView);
+			topMenu.drawTo(window); //draw top menu
 
 			//CircleShape shape(50);
 			//shape.setFillColor(sf::Color(100, 250, 50));
