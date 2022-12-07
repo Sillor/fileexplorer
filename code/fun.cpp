@@ -48,7 +48,7 @@ void Directory::displayContents(RenderWindow &windowParam, RectangleShape &backg
 	{
 		//cout << thing.x << "and " << thing.y;
 		// cout << thing.y << endl;
-		cout << "\t";
+		//cout << "\t";
 	}
 
 	for (int index = 0; index < contents.size() - 1; index++)
@@ -76,14 +76,14 @@ void Directory::displayContents(RenderWindow &windowParam, RectangleShape &backg
 void Directory::setIcon()
 {
 	info.iconPtr = new Texture;
-	info.iconPtr->loadFromFile("/home/admin/Desktop/Capture_decran_du_2022-12-04_00-41-38.png"); // generic directory image
+	info.iconPtr->loadFromFile("images/folder.png"); // generic directory image
 																								 // textureIcons.push_back(info.iconPtr);
 }
 
 void File::setIcon()
 {
 	info.iconPtr = new Texture; // This causes a memory leak if you run it long enough?
-	info.iconPtr->loadFromFile("/home/admin/Desktop/Capture_decran_du_2022-12-04_00-41-38.png");
+	info.iconPtr->loadFromFile("images/folder.png");
 	// textureIcons.push_back(info.iconPtr);
 }
 
