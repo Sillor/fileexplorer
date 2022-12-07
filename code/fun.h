@@ -162,6 +162,87 @@ class ImageFile : public File
 		// -------------------------------------------
 };
 
+class TextFile : public File				
+{	
+	public:
+		// constructors/destructor -------------------
+		TextFile(filesystem::path initPath);
+		~TextFile() {};
+		// -------------------------------------------
+
+		// setter ------------------------------------
+		virtual void setIcon() override;
+		// -------------------------------------------
+
+		// getter ------------------------------------
+		virtual itemInfo getInfo() const override;
+		// -------------------------------------------
+
+		// void --------------------------------------
+		string getFileType();
+		virtual void openItem() const override;
+		// -------------------------------------------
+	
+	protected:
+		// attributes --------------------------------
+		string fileType;
+		// -------------------------------------------
+};
+
+class AudioFile : public File				
+{	
+	public:
+		// constructors/destructor -------------------
+		AudioFile(filesystem::path initPath);
+		~AudioFile() {};
+		// -------------------------------------------
+
+		// setter ------------------------------------
+		virtual void setIcon() override;
+		// -------------------------------------------
+
+		// getter ------------------------------------
+		virtual itemInfo getInfo() const override;
+		// -------------------------------------------
+
+		// void --------------------------------------
+		string getFileType();
+		virtual void openItem() const override;
+		// -------------------------------------------
+	
+	protected:
+		// attributes --------------------------------
+		string fileType;
+		// -------------------------------------------
+};
+
+class VideoFile : public File				
+{	
+	public:
+		// constructors/destructor -------------------
+		VideoFile(filesystem::path initPath);
+		~VideoFile() {};
+		// -------------------------------------------
+
+		// setter ------------------------------------
+		virtual void setIcon() override;
+		// -------------------------------------------
+
+		// getter ------------------------------------
+		virtual itemInfo getInfo() const override;
+		// -------------------------------------------
+
+		// void --------------------------------------
+		string getFileType();
+		virtual void openItem() const override;
+		// -------------------------------------------
+	
+	protected:
+		// attributes --------------------------------
+		string fileType;
+		// -------------------------------------------
+};
+
 
 
 

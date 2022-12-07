@@ -46,7 +46,7 @@ void Directory::displayContents(RenderWindow &windowParam, RectangleShape &backg
 
 	for (auto thing : gridCoords)
 	{
-		cout << thing.x << "and " << thing.y;
+		//cout << thing.x << "and " << thing.y;
 		// cout << thing.y << endl;
 		cout << "\t";
 	}
@@ -88,9 +88,16 @@ void File::setIcon()
 }
 
 void ImageFile::setIcon()
-{
+{}
 
-}
+void TextFile::setIcon() 
+{}
+
+void AudioFile::setIcon()
+{}
+
+void VideoFile::setIcon()
+{}
 
 File::File(filesystem::path initPath) : Item(initPath)
 {
@@ -126,6 +133,59 @@ ImageFile::ImageFile(filesystem::path initPath) : File(initPath)
 	fileType = parseFileData(fileInfo);
 }
 
+AudioFile::AudioFile(filesystem::path initPath) : File(initPath)
+{
+	string pathStr = getInfo().location;
+	string command = ""; // command to pass to system() to get the file type info
+	string quotes = "\"";
+	command = "file " + quotes + pathStr + quotes + " > \"system call output.txt\"";
+	system(command.c_str());
+
+	fstream fileInfo("system call output.txt");
+	if (fileInfo.fail())
+	{
+		cout << "FILE OPEN FAILURE << endl";
+	}
+
+	fileType = parseFileData(fileInfo);
+}
+
+TextFile::TextFile(filesystem::path initPath) : File(initPath)
+{
+	string pathStr = getInfo().location;
+	string command = ""; // command to pass to system() to get the file type info
+	string quotes = "\"";
+	command = "file " + quotes + pathStr + quotes + " > \"system call output.txt\"";
+	system(command.c_str());
+
+	fstream fileInfo("system call output.txt");
+	if (fileInfo.fail())
+	{
+		cout << "FILE OPEN FAILURE << endl";
+	}
+
+	fileType = parseFileData(fileInfo);
+}
+
+
+VideoFile::VideoFile(filesystem::path initPath) : File(initPath)
+{
+	string pathStr = getInfo().location;
+	string command = ""; // command to pass to system() to get the file type info
+	string quotes = "\"";
+	command = "file " + quotes + pathStr + quotes + " > \"system call output.txt\"";
+	system(command.c_str());
+
+	fstream fileInfo("system call output.txt");
+	if (fileInfo.fail())
+	{
+		cout << "FILE OPEN FAILURE << endl";
+	}
+
+	fileType = parseFileData(fileInfo);
+}
+
+
 void Directory::openItem() const
 {
 }
@@ -135,6 +195,15 @@ void File::openItem() const
 }
 
 void ImageFile::openItem() const
+{}
+
+void AudioFile::openItem() const 
+{}
+
+void VideoFile::openItem() const
+{}
+
+void TextFile::openItem() const
 {}
 
 void Directory::populate()
@@ -183,8 +252,50 @@ void Directory::populate()
 			Item *tempPtr2 = new File(file.path());
 
 			string fileType = tempPtr2->getInfo().fileType;
+			cout << "fileType: " << fileType << endl;
+			/*
+			if (fileType == "jpeg" || fileType == "png")
+			{
+				Item* tempPtr3 = new ImageFile(file.path());
+				contents.push_back(tempPtr3);
+				delete tempPtr2;
+			}
+			
+			else if (fileType == "mp3")
+			{
+				Item* tempPtr3 = new AudioFile(file.path());
+				contents.push_back(tempPtr3);
+				delete tempPtr2;
+			}
 
-			contents.push_back(tempPtr2);
+			else if (fileType == "txt")
+			{
+				Item* tempPtr3 = new TextFile(file.path());
+				contents.push_back(tempPtr3);
+				delete tempPtr2;
+			}
+
+			else if (fileType == "mp4")
+			{
+				Item* tempPtr3 = new VideoFile(file.path());
+				contents.push_back(tempPtr3);
+				delete tempPtr2;
+			}
+
+			else if (fileType == "undetected")
+			{
+				contents.push_back(tempPtr2);
+			}
+
+			else 
+			{
+				contents.push_back(tempPtr2);
+			}
+			*/
+
+			
+
+			//contents.push_back(tempPtr2);
 
 			// cout << getNameFromFullPath(file.path()) << right << "\t\t\t" << "MISCELLANEOUS THING ADDED" << endl;
 		}
@@ -208,6 +319,33 @@ itemInfo Item::getInfo() const
 
 //itemInfo File::Item::getInfo() const
 itemInfo ImageFile::getInfo() const
+{
+	itemInfo holder = info;
+	holder.location = location.string(); // this line.
+	holder.fileType = "directory";
+	holder.icon = info.icon;
+	return holder;
+}
+
+itemInfo AudioFile::getInfo() const
+{
+	itemInfo holder = info;
+	holder.location = location.string(); // this line.
+	holder.fileType = "directory";
+	holder.icon = info.icon;
+	return holder;
+}
+
+itemInfo VideoFile::getInfo() const
+{
+	itemInfo holder = info;
+	holder.location = location.string(); // this line.
+	holder.fileType = "directory";
+	holder.icon = info.icon;
+	return holder;
+}
+
+itemInfo TextFile::getInfo() const
 {
 	itemInfo holder = info;
 	holder.location = location.string(); // this line.
