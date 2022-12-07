@@ -55,7 +55,20 @@ void Directory::displayContents(RenderWindow &windowParam, RectangleShape &backg
 
 			coordInfo itemSquare = calculateSquare(xPos, yPos + 45);
 
-			//coordinates.at(index) = itemSquare;
+			try 
+			{
+				if (coordinates.size() < contents.size())
+				{
+					coordinates.resize(coordinates.size() + 1);		// increase size by one
+					coordinates.at(index) = itemSquare;
+				}
+				
+			}
+			catch(...)
+			{
+				//cout << coordinates.size() << endl;
+			}
+			cout << coordinates.size() << endl;
 
 			// cout << "subIndex:  " << (subIndex) << endl;
 			// cout << "horizontalWidth: " << horizontalWidth << endl;

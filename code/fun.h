@@ -97,7 +97,7 @@ class Directory : public Item
 {
 	public:
 		// constructors/destructor -----------------------------------
-		Directory(filesystem::path initPath) : Item(initPath)  {coordinates.resize(1000); }
+		Directory(filesystem::path initPath) : Item(initPath)  {/*coordinates.resize(1000);*/ }
 		~Directory() {};
 		// -----------------------------------------------------------
 

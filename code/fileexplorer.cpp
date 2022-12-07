@@ -11,7 +11,7 @@ using namespace sf;
 using namespace std;
 
 
-const string USERNAME = "egor";
+const string USERNAME = "admin";
 
 int main()
 {
