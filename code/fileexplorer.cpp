@@ -71,7 +71,7 @@ int main()
 			}
 
 			// Rowans part
-			/*
+			
 			if (event.type == Event::MouseButtonPressed)
 			{
 
@@ -80,18 +80,20 @@ int main()
 						//cout << "blah" << endl;
 						Vector2i mousePos = Mouse::getPosition(window);
 						cout << "mouse " << mousePos.x << "\t" << mousePos.y << endl; 
-						cout << "topRight " << element.topRight.x << endl;
-						cout << "bottomLeft " << element.bottomLeft.x << endl;
+						cout << "topRight " << element.topRight.x << " " <<element.topRight.y << endl;
+						cout << "topLeft " << element.topLeft.x << " " << element.topLeft.y << endl;
+						cout << "bottomLeft " << element.bottomLeft.x << " " << element.bottomLeft.y << endl;
+						cout << "bottomRight " << element.bottomRight.x << " " << element.bottomRight.y << endl;
 						cout << endl << endl;
 
 						//if (mousePos.x > element.bottomLeft.x && mousePos.y bottomLeft.y)
-						if ( mousePos.x <= element.topRight.x && mousePos.x >= element.topLeft.x && mousePos.y <= element.topRight.y && mousePos.y >= element.bottomLeft.y)
+						if ( mousePos.x <= element.topRight.x && mousePos.x >= element.topLeft.x && mousePos.y >= element.topRight.y && mousePos.y <= element.bottomLeft.y)
 						{
 							cout << "folder click << endl";
 						}
 				}
 			}
-			*/
+			
 
 		}
 		

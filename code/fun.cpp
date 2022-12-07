@@ -43,6 +43,7 @@ void Directory::displayContents(RenderWindow &windowParam, RectangleShape &backg
 	int horizontalWidth = size.x;
 	int verticalWidth = size.y;
 	vector<Vector2f> gridCoords;
+	coordinates.clear();
 
 	int yPos = 0;
 	int xPos = 0;
@@ -53,21 +54,24 @@ void Directory::displayContents(RenderWindow &windowParam, RectangleShape &backg
 			xPos = subIndex + 300;
 			gridCoords.push_back(Vector2f(xPos, yPos + 45));						// ZEBRAS
 
+			
 			coordInfo itemSquare = calculateSquare(xPos, yPos + 45);
-
 			try 
 			{
 				if (coordinates.size() < contents.size())
 				{
-					coordinates.resize(coordinates.size() + 1);		// increase size by one
-					coordinates.at(index) = itemSquare;
+					//coordinates.resize(coordinates.size() + 1);		// increase size by one
+					//coordinates.at(index) = itemSquare;
+					coordinates.push_back(itemSquare);
 				}
 				
 			}
 			catch(...)
 			{
 				//cout << coordinates.size() << endl;
+				cout << "ERROR" << endl;
 			}
+			
 			//cout << coordinates.size() << endl;
 
 			// cout << "subIndex:  " << (subIndex) << endl;
@@ -81,6 +85,11 @@ void Directory::displayContents(RenderWindow &windowParam, RectangleShape &backg
 		gridCoords.push_back(Vector2f(xPos, yPos));
 	}
 
+	for (int index = 0; index < verticalWidth; index = index + 120)
+	{
+		
+	}
+
 	for (auto thing : gridCoords)
 	{
 		//cout << thing.x << "and " << thing.y;
@@ -91,6 +100,7 @@ void Directory::displayContents(RenderWindow &windowParam, RectangleShape &backg
 	for (int index = 0; index < contents.size(); index++)
 	{
 		contents.at(index)->setIcon();
+
 		Sprite tempSprite;
 		tempSprite.setTexture(*contents.at(index)->getInfo().iconPtr);
 
