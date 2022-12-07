@@ -200,7 +200,7 @@ void TextFile::setIcon()
 void AudioFile::setIcon()
 {
 	info.iconPtr = new Texture; 
-	info.iconPtr->loadFromFile("/images/audio.png");
+	info.iconPtr->loadFromFile("images/audio.png");
 }
 
 void VideoFile::setIcon()
@@ -316,10 +316,21 @@ void ImageFile::openItem() const
 }
 
 void AudioFile::openItem() const 
-{}
+{
+	string command = "mpv ";
+	command += info.location;
+
+	system(command.c_str());
+}
 
 void VideoFile::openItem() const
-{}
+{
+	string command = "mpv ";
+	command += info.location;
+
+	system(command.c_str());
+
+}
 
 void TextFile::openItem() const
 {}
