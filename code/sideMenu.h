@@ -2,7 +2,6 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "button.h"
-
 using namespace std;
 using namespace sf;
 
