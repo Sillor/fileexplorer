@@ -90,3 +90,30 @@ public:
         setPosition(pos);
     }
 };
+
+class SideButton : public Button
+{
+public:
+    SideButton(string t, Vector2f pos) : Button()
+    {
+        text.setString(t);
+        text.setColor(Color{ 0x98abb2ff });
+        text.setCharacterSize(16);
+
+        button.setSize({ 300, 60 });
+        button.setFillColor(Color{ 0x2a2f3aff });
+
+        setPosition(pos);
+    }
+
+    void setPosition(Vector2f pos)
+    {
+        button.setPosition(pos);
+
+        float xPos = (pos.x + button.getGlobalBounds().width/3.f) -
+                  (text.getGlobalBounds().width/2) - 60.f;
+        float yPos = (pos.y + button.getGlobalBounds().height/3.f) -
+                  (text.getGlobalBounds().height/2);
+        text.setPosition({ xPos, yPos });
+    }
+};

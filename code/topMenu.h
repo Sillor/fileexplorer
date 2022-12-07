@@ -9,17 +9,20 @@ using namespace sf;
 class TopMenu
 {
 public:
-    void loadVector()
+    TopMenu()
     {
         for (int i = 0; i < 6; i++)
         {
             TopButton* btn = new TopButton(names[i], { i * 100, 0 });
             topMenuButtons.push_back(btn);
         }
-        
+        backgroundStrip.setSize({ 3840, 40 });
+        backgroundStrip.setPosition({ 0, 0 });
+        backgroundStrip.setFillColor(Color{ 0x2a2f3aff });
     }
     void drawTo(RenderWindow &window)
     {
+        window.draw(backgroundStrip);
         for (int i = 0; i < 6; i++)
         {
             topMenuButtons[i]->drawTo(window);
@@ -43,5 +46,6 @@ public:
 
 private:
     string names[6] = { "New", "Open", "Rename", "Copy", "Paste", "Delete" };
-    vector<TopButton*> topMenuButtons;    
+    vector<TopButton*> topMenuButtons;   
+    RectangleShape backgroundStrip;
 };

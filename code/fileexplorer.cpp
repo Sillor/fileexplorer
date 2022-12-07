@@ -6,6 +6,7 @@
 #include <unistd.h>  
 #include "fun.h"
 #include "topMenu.h"
+#include "sideMenu.h"
 using namespace sf;
 using namespace std;
 
@@ -16,11 +17,14 @@ int main()
 {
 	cout << endl << endl << "------------------" << endl << endl;
 
-	Font font;
-	font.loadFromFile("fonts/Ubuntu-Light.ttf"); // light font for buttons
+	Font lightFont;
+	lightFont.loadFromFile("fonts/Ubuntu-Light.ttf"); // light font for buttons
+	Font regularFont;
+	regularFont.loadFromFile("fonts/Ubuntu-Regular.ttf"); // regular font for buttons
 	TopMenu topMenu;
-	topMenu.loadVector(); //probably better move into constructor
-	topMenu.setFont(font);
+	topMenu.setFont(regularFont);
+	SideMenu sideMenu;
+	sideMenu.setFont(regularFont);
 
 	filesystem::path currentDir = "/home/admin/Desktop/fileexplorer";	// Set this directory to be something on your computer		
 	Directory testDir(currentDir);
@@ -60,8 +64,16 @@ int main()
 				{
 					if (topMenu.getButton(i).isMouseOver(window))
 					{
-						cout << "Button " << i << " pressed" << endl;
+						cout << "topButton " << i << " pressed" << endl;
 						topMenu.setButtonColor(i, Color{ 0x142238FF });
+					}
+				}
+				for (int i = 0; i < 7; i++)
+				{
+					if (sideMenu.getButton(i).isMouseOver(window))
+					{
+						cout << "sideButton " << i << " pressed" << endl;
+						sideMenu.setButtonColor(i, Color{ 0x142238FF });
 					}
 				}
 			}
@@ -79,6 +91,18 @@ int main()
 						topMenu.setButtonColor(i, Color{ 0x2A2f3AFF });
 					}
 				}
+
+				for (int i = 0; i < 7; i++)
+				{
+					if (sideMenu.getButton(i).isMouseOver(window))
+					{
+						sideMenu.setButtonColor(i, Color{ 0x252933FF });
+					}
+					else
+					{
+						sideMenu.setButtonColor(i, Color{ 0x2A2f3AFF });
+					}
+				}
 			}
 
 		}
@@ -90,6 +114,7 @@ int main()
 			window.clear();
 			//window.draw(background);			
 			testDir.displayContents(window, background, mainView);
+			sideMenu.drawTo(window); //draw side menu
 			topMenu.drawTo(window); //draw top menu
 
 			//CircleShape shape(50);
