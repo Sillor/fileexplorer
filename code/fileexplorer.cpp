@@ -113,7 +113,8 @@ int main()
 			
 			window.clear();
 			//window.draw(background);			
-			testDir.displayContents(window, background, mainView);
+			testDir.displayContents(window, background, mainView);	// create vector with current coords in main, update it in here
+																	// abstract type with the coords but also the associated file for each coord
 			sideMenu.drawTo(window); //draw side menu
 			topMenu.drawTo(window); //draw top menu
 

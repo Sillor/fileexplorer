@@ -23,6 +23,7 @@ struct itemInfo
 	
 };
 
+
 //Color testColor(100.0, 100.0, 100.0);
 
 
@@ -77,6 +78,16 @@ class Item
 		// ------------------------------
 };
 
+struct coordInfo
+{
+	Vector2f topLeft; // = x + y
+	int bottomLeft; // add 91 to y
+	int topRight;    // add 91 to x
+	int bottomRight; // add 91 to both
+
+	Item* thing;
+};
+
 class Directory : public Item
 {
 	public:
@@ -88,6 +99,7 @@ class Directory : public Item
 		// setter ---------------------------
 		void populate();										// collects the things stored in the directory and saves them in the vector variable "location"
 		virtual void setIcon() override;
+		void setPath(string param) {location = param; info.location = param; }
 		// ----------------------------------
 
 		// getter ---------------------------
@@ -102,10 +114,13 @@ class Directory : public Item
 
 	protected:
 		// attributes -----------------------
-		vector<Item*> contents;								// contains a list of Item pointers for every item in the directory.
+		vector<Item*> contents;	
+		vector<coordInfo> coordinates;							// contains a list of Item pointers for every item in the directory.
 		// Vector2i iconScreenCoords
 		// ----------------------------------
 };
+
+
 
 // the generic parent of all actual files, derives from Item. Called GenericFile in UML diagram
 class File : public Item
@@ -243,6 +258,8 @@ class VideoFile : public File
 		string fileType;
 		// -------------------------------------------
 };
+
+
 
 
 

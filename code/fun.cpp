@@ -52,7 +52,7 @@ void Directory::displayContents(RenderWindow &windowParam, RectangleShape &backg
 		//cout << "\t";
 	}
 
-	for (int index = 0; index < contents.size() - 1; index++)
+	for (int index = 0; index < contents.size(); index++)
 	{
 		contents.at(index)->setIcon();
 		Sprite tempSprite;
