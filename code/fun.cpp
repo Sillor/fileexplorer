@@ -32,7 +32,11 @@ void Directory::displayContents(RenderWindow &windowParam, RectangleShape &backg
 		for (int subIndex = 0; subIndex < (horizontalWidth - 120 - 300); subIndex = subIndex + 120)
 		{
 			xPos = subIndex + 300;
-			gridCoords.push_back(Vector2f(xPos, yPos + 45));
+			gridCoords.push_back(Vector2f(xPos, yPos + 45));						// ZEBRAS
+
+			//coordInfo itemSquare = calculateSquare(itemSquare);
+
+			//coordinates.at(index) = itemSquare;
 
 			// cout << "subIndex:  " << (subIndex) << endl;
 			// cout << "horizontalWidth: " << horizontalWidth << endl;

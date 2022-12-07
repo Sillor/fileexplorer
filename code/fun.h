@@ -99,7 +99,7 @@ class Directory : public Item
 		// setter ---------------------------
 		void populate();										// collects the things stored in the directory and saves them in the vector variable "location"
 		virtual void setIcon() override;
-		void setPath(string param) {location = param; info.location = param; }
+		void setPath(string param) {location = param; info.location = param; contents.empty(); }
 		// ----------------------------------
 
 		// getter ---------------------------
