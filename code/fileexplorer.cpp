@@ -82,6 +82,8 @@ int main()
 					if (sideMenu.getButton(i).isMouseOver(window))
 					{
 						currentDir = "/home/" + USERNAME + "/" + sideMenu.getButtonName(i);
+						currentDisplayingDirectory.setPath(currentDir);
+						currentDisplayingDirectory.populate();
 						cout << currentDir << endl;
 					}
 				}
