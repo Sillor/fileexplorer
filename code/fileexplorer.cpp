@@ -101,10 +101,13 @@ int main()
 							//Item tempDirectory = *currentDisplayingDirectory.getContents().at(counter);
 							Directory tempDir(currentDisplayingDirectory.getContents().at(counter)->getPath());
 							currentDisplayingDirectory = tempDir;
+							currentDisplayingDirectory.populate();
+							cout << currentDisplayingDirectory.getContents().at(counter)->getPath() << endl;
 						}
 						 //currentDisplayingDirectory = *currentDisplayingDirectory.getContents().at(counter);
 						//Item* thingy = currentDisplayingDirectory.getContents().at(counter);
 						//currentDisplayingDirectory = thingy;
+
 					}
 					counter++;
 				}
