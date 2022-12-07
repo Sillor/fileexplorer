@@ -19,7 +19,6 @@ int main()
 	Font font;
 	font.loadFromFile("fonts/Ubuntu-Light.ttf"); // light font for buttons
 	TopMenu topMenu;
-	topMenu.loadVector(); //probably better move into constructor
 	topMenu.setFont(font);
 
 	filesystem::path currentDir = "testDir";	// Set this directory to be something on your computer		
