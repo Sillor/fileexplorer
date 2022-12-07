@@ -60,41 +60,8 @@ int main()
 
 			if (event.type == Event::MouseButtonPressed) //if mouse pressed change color of button
 			{
-				for (int i = 0; i < 6; i++)
-				{
-					if (topMenu.getButton(i).isMouseOver(window))
-					{
-						cout << "topButton " << i << " pressed" << endl;
-						topMenu.setButtonColor(i, Color{ 0x142238FF });
-					}
-				}
-				for (int i = 0; i < 7; i++)
-				{
-					if (sideMenu.getButton(i).isMouseOver(window))
-					{
-						cout << "sideButton " << i << " pressed" << endl;
-						sideMenu.setButtonColor(i, Color{ 0x142238FF });
-					}
-				}
-
-				for (int i = 1; i < 7; i++)
-				{
-					if (sideMenu.getButton(i).isMouseOver(window))
-					{
-						currentDir = "/home/" + USERNAME + "/" + sideMenu.getButtonName(i);
-						currentDisplayingDirectory.setPath(currentDir);
-						currentDisplayingDirectory.populate();
-						cout << currentDir << endl;
-					}
-				}
-
-				if (sideMenu.getButton(0).isMouseOver(window))
-					{
-						currentDir = "/home/" + USERNAME;
-						currentDisplayingDirectory.setPath(currentDir);
-						currentDisplayingDirectory.populate();
-						cout << currentDir << endl;
-					}
+				topMenu.buttonClick(window);				
+				sideMenu.buttonClick(window, currentDisplayingDirectory, USERNAME);
 			}
 
 			if (event.type == Event::MouseMoved) //if mouse moved over button change color of the button

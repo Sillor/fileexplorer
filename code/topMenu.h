@@ -42,6 +42,17 @@ public:
     {
         topMenuButtons[index]->setBackColor(color);
     }
+    void buttonClick(RenderWindow &window)
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            if (TopMenu::getButton(i).isMouseOver(window))
+            {
+                cout << "topButton " << i << " pressed" << endl;
+                TopMenu::setButtonColor(i, Color{ 0x142238FF });
+            }
+        }
+    }
 
 private:
     string names[6] = { "New", "Open", "Rename", "Copy", "Paste", "Delete" };
