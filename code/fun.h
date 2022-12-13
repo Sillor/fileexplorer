@@ -24,9 +24,6 @@ struct itemInfo
 };
 
 
-//Color testColor(100.0, 100.0, 100.0);
-
-
 // PROTOTYPES
 // --------------------------------------------------------------------
 string getNameFromFullPath(string pathParam);
@@ -38,8 +35,6 @@ char* getNameFromFullPath_CStr(string pathParam);
 bool thumbAlreadyExists(string folder, string file);
 string getTitle(string titleParam);
 string returnParentDirStr(string currentPath);
-
-
 // --------------------------------------------------------------------
 
 // CLASSES
@@ -53,15 +48,15 @@ class Item
 		// ------------------------------
 
 		// setter -----------------------
-		virtual void setIcon() = 0;								// UNDEFINED FOR NOW, will be used to determine which visual to use to represent the file/folder/sym link/whatever
+		virtual void setIcon() = 0;								
 		void setIconScreenCoords() {};
 		void cleanTexture() { delete info.iconPtr; }
 			
 		// ------------------------------
 
 		// getter -----------------------
-		filesystem::path getPath() const;						// returns a filesystem::path object for the thing
-		virtual itemInfo getInfo() const = 0;		// returns the full path on the filesystem of the thing and the file type
+		filesystem::path getPath() const;						
+		virtual itemInfo getInfo() const = 0;		
 		Vector2f getIconScreenCoords() const {};
 		// ------------------------------
 
@@ -71,7 +66,7 @@ class Item
 
 	protected:
 		// attributes -------------------
-		filesystem::path location;								// filesystem::path object for the item
+		filesystem::path location;								
 		Texture icon;
 		Vector2f iconScreenCoords;
 
@@ -92,7 +87,7 @@ struct coordInfo
 };
 
 
-coordInfo calculateSquare(int xPos, int yPos);		// LEAVE HERE
+coordInfo calculateSquare(int xPos, int yPos);		
 
 class Directory : public Item
 {
@@ -103,7 +98,7 @@ class Directory : public Item
 		// -----------------------------------------------------------
 
 		// setter ---------------------------
-		void populate();										// collects the things stored in the directory and saves them in the vector variable "location"
+		void populate();										
 		virtual void setIcon() override;
 		void setPath(string param) {location = param; info.location = param; contents.clear(); }
 		void emptyCoordList() {coordinates.clear(); }
