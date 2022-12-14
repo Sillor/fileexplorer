@@ -51,10 +51,8 @@ void Directory::displayContents(RenderWindow &windowParam, RectangleShape &backg
 	Vector2f size = static_cast<Vector2f>(windowParam.getSize());
 	mainView = View(FloatRect(0.f, 0.f, size.x, size.y));
 	windowParam.setView(mainView);
-
 	windowParam.draw(background);
 	Vector2f itemCoords(0.0, 0.0);
-
 	int horizontalWidth = size.x;
 	int verticalWidth = size.y;
 	vector<Vector2f> gridCoords;
@@ -85,17 +83,23 @@ void Directory::displayContents(RenderWindow &windowParam, RectangleShape &backg
 	for (int index = 0; index < contents.size(); index++)		// and now setting up and drawing everything to its location
 	{
 		try { contents.at(index)->setIcon(); } catch(...) {cout << "ERROR 1" << endl; }
-
 		Sprite tempSprite;
 		tempSprite.setTexture(*contents.at(index)->getInfo().iconPtr);
-
 		try
 		{
 			try { tempSprite.setPosition(gridCoords.at(index)); } catch(...) {cout << "ERROR 2" << endl; }
 			try {iconScreenCoords = gridCoords.at(index); } catch(...) {cout << "ERROR 3" << endl; }
 			windowParam.draw(tempSprite);
-			
-			Text text; 
+			setUpAndDrawTextBox(iconScreenCoords, windowParam, index);
+			try {contents.at(index)->cleanTexture(); } catch(...) {cout << "ERROR 4" << endl;}
+		}
+		catch (out_of_range &outOfRangeException) { cout << "ERROR 5" << endl; }
+	}
+}
+
+void Directory::setUpAndDrawTextBox(Vector2f& iconScreenCoords, RenderWindow& windowParam, int& index)
+{
+	Text text; 
 			string title;
 			title = getTitle(contents.at(index)->getInfo().location);			
 			text.setString(title);
@@ -111,13 +115,6 @@ void Directory::displayContents(RenderWindow &windowParam, RectangleShape &backg
 			text.setPosition(textScreenCoords);
 			windowParam.draw(text);
 
-			try {contents.at(index)->cleanTexture(); } catch(...) {cout << "ERROR 4" << endl;}
-		}
-		catch (out_of_range &outOfRangeException)
-		{
-			cout << "ERROR 5" << endl;
-		}
-	}
 }
 
 string getTitle(string titleParam)
@@ -292,7 +289,6 @@ void TextFile::openItem() const
 
 void Directory::populate()
 {
-	//Using <filesystem> to loop through the contents of a directory and store it in the contents vector member of Directory
 	for (const filesystem::directory_entry &file : filesystem::directory_iterator(getPath()))
 	{
 		if (filesystem::is_directory(file.path())) 
@@ -301,57 +297,41 @@ void Directory::populate()
 			tempPtr = new Directory(file.path());
 			contents.push_back(tempPtr);
 		}
-
 		else if (filesystem::is_symlink(file.path()))
 		{
 			Item *tempPtr = nullptr;
 			tempPtr = new Directory(file.path());
 			contents.push_back(tempPtr);
 		}
-		/*
-		else if (fileType == "jpg")
-		{
-			Item* tempPtr = nullptr;
-			tempPtr = new Image(file.path());
-			contents.push_back(tempPtr);
-		}
-		*/
-
 		else // if its anything other than a directory...
 		{
 			Item *tempPtr2 = new File(file.path());
 			string fileType = tempPtr2->getInfo().fileType;
-			
 			if (fileType == "jpeg" || fileType == "png")
 			{
 				Item* tempPtr3 = new ImageFile(file.path());
 				contents.push_back(tempPtr3);			
 				delete tempPtr2;
 			}
-			
 			else if (fileType == "mp3")
 			{
 				Item* tempPtr3 = new AudioFile(file.path());
 				contents.push_back(tempPtr3);
 				delete tempPtr2;
 			}
-
 			else if (fileType == "txt")
 			{
 				Item* tempPtr3 = new TextFile(file.path());
 				contents.push_back(tempPtr3);
 				delete tempPtr2;
 			}
-
 			else if (fileType == "mp4")
 			{
 				Item* tempPtr3 = new VideoFile(file.path());
 				contents.push_back(tempPtr3);
 				delete tempPtr2;
 			}
-
 			else if (fileType == "undetected") { contents.push_back(tempPtr2); }
-			
 			else { contents.push_back(tempPtr2); }
 		}
 	}

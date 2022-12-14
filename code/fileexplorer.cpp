@@ -22,6 +22,38 @@ void setUp(Font& lightFont, Font& regularFont, TopMenu& topMenu, SideMenu& sideM
 	background.setPosition(Vector2f(0.0, 0.0));
 }
 
+void registerClick(Directory& currentDisplayingDirectory, RenderWindow& window)
+{
+	int counter = 0;
+	for (auto element : currentDisplayingDirectory.getCoordinates()) {
+		Vector2i mousePos = Mouse::getPosition(window);
+
+		if (mousePos.x <= element.topRight.x && mousePos.x >= element.topLeft.x && mousePos.y >= element.topRight.y && mousePos.y <= element.bottomLeft.y) {
+			try {cout << currentDisplayingDirectory.getContents().at(counter)->getInfo().location << endl;} catch(out_of_range& ex){cout << "ERROR 10" << endl;}
+
+			if (filesystem::is_directory(currentDisplayingDirectory.getContents().at(counter)->getPath())) {
+				Directory tempDir(currentDisplayingDirectory.getContents().at(counter)->getPath());
+				currentDisplayingDirectory = tempDir;
+				currentDisplayingDirectory.populate();
+				break;
+				//try { cout << currentDisplayingDirectory.getContents().at(counter)->getPath() << endl; } catch(out_of_range& exception) {cout << "ERROR 11" << endl;}
+			}
+			else { currentDisplayingDirectory.getContents().at(counter)->openItem(); }
+		}
+		counter++;
+	}
+}
+
+void updateScreen(RenderWindow& window, Directory& currentDisplayingDirectory, RectangleShape& background, View& mainView, SideMenu& sideMenu, TopMenu& topMenu, bool& wait)
+{
+	window.clear();
+	currentDisplayingDirectory.displayContents(window, background, mainView);
+	sideMenu.drawTo(window); // draw side menu
+	topMenu.drawTo(window);	 // draw top menu
+	window.display();
+	wait = true;
+}
+
 int main() {
 	Font lightFont, regularFont;
 	TopMenu topMenu;
@@ -59,35 +91,11 @@ int main() {
 				currentDisplayingDirectory.populate();
 			}
 
-			if (event.type == Event::MouseButtonPressed) {
-				int counter = 0;
-				for (auto element : currentDisplayingDirectory.getCoordinates()) {
-					Vector2i mousePos = Mouse::getPosition(window);
-
-					if (mousePos.x <= element.topRight.x && mousePos.x >= element.topLeft.x && mousePos.y >= element.topRight.y && mousePos.y <= element.bottomLeft.y) {
-						try {cout << currentDisplayingDirectory.getContents().at(counter)->getInfo().location << endl;} catch(out_of_range& ex){cout << "ERROR 10" << endl;}
-
-						if (filesystem::is_directory(currentDisplayingDirectory.getContents().at(counter)->getPath())) {
-							Directory tempDir(currentDisplayingDirectory.getContents().at(counter)->getPath());
-							currentDisplayingDirectory = tempDir;
-							currentDisplayingDirectory.populate();
-							break;
-							try { cout << currentDisplayingDirectory.getContents().at(counter)->getPath() << endl; } catch(out_of_range& exception) {cout << "ERROR 11" << endl;}
-						}
-						else { currentDisplayingDirectory.getContents().at(counter)->openItem(); }
-					}
-					counter++;
-				}
-			}
+			if (event.type == Event::MouseButtonPressed) { registerClick(currentDisplayingDirectory, window); }	
 		}
 
 		if (wait == false || window.getSize() != currentWindowSize) {
-			window.clear();
-			currentDisplayingDirectory.displayContents(window, background, mainView);
-			sideMenu.drawTo(window); // draw side menu
-			topMenu.drawTo(window);	 // draw top menu
-			window.display();
-			wait = true;
+		updateScreen(window, currentDisplayingDirectory, background, mainView, sideMenu, topMenu, wait);	
 		}
 		usleep(50000);
 	}

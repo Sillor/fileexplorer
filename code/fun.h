@@ -35,6 +35,8 @@ char* getNameFromFullPath_CStr(string pathParam);
 bool thumbAlreadyExists(string folder, string file);
 string getTitle(string titleParam);
 string returnParentDirStr(string currentPath);
+
+
 // --------------------------------------------------------------------
 
 // CLASSES
@@ -114,6 +116,7 @@ class Directory : public Item
 		void printContents() const;				// print the names and paths of the things in the directory
 		void displayContents(RenderWindow& windowParam, RectangleShape& background, View& mainView);							// display the directory in the browser
 		virtual void openItem() const override;
+		void setUpAndDrawTextBox(Vector2f& iconScreenCoords, RenderWindow& windowParam, int& index);
 		// ----------------------------------
 
 	protected:
