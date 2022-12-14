@@ -12,8 +12,7 @@ using namespace sf;
 
 #ifndef FUN_H
 #define FUN_H
-struct itemInfo
-{
+struct itemInfo {
 	string fileType;
 	string location;
 	Texture icon;
@@ -41,8 +40,7 @@ string returnParentDirStr(string currentPath);
 
 // CLASSES
 // --------------------------------------------------------------------
-class Item
-{
+class Item {
 	public:
 		// constructors/destructor ------
 		Item(filesystem::path initPath) { location = initPath; info.location = initPath; }
@@ -78,8 +76,7 @@ class Item
 		// ------------------------------
 };
 
-struct coordInfo
-{
+struct coordInfo {
 	Vector2f topLeft; // = x + y
 	Vector2f bottomLeft; // add 91 to y
 	Vector2f topRight;    // add 91 to x
@@ -91,8 +88,7 @@ struct coordInfo
 
 coordInfo calculateSquare(int xPos, int yPos);		
 
-class Directory : public Item
-{
+class Directory : public Item {
 	public:
 		// constructors/destructor -----------------------------------
 		Directory(filesystem::path initPath) : Item(initPath)  {/*coordinates.resize(1000);*/ }
@@ -130,8 +126,7 @@ class Directory : public Item
 
 
 // the generic parent of all actual files, derives from Item. Called GenericFile in UML diagram
-class File : public Item
-{	
+class File : public Item {	
 	public:
 		// constructors/destructor -------------------
 		File(filesystem::path initPath);
@@ -158,8 +153,7 @@ class File : public Item
 };
 // --------------------------------------------------------------------
 
-class ImageFile : public File				
-{	
+class ImageFile : public File {	
 	public:
 		// constructors/destructor -------------------
 		ImageFile(filesystem::path initPath);
@@ -185,8 +179,7 @@ class ImageFile : public File
 		// -------------------------------------------
 };
 
-class TextFile : public File				
-{	
+class TextFile : public File {	
 	public:
 		// constructors/destructor -------------------
 		TextFile(filesystem::path initPath);
@@ -212,8 +205,7 @@ class TextFile : public File
 		// -------------------------------------------
 };
 
-class AudioFile : public File				
-{	
+class AudioFile : public File {	
 	public:
 		// constructors/destructor -------------------
 		AudioFile(filesystem::path initPath);
@@ -239,8 +231,7 @@ class AudioFile : public File
 		// -------------------------------------------
 };
 
-class VideoFile : public File				
-{	
+class VideoFile : public File {	
 	public:
 		// constructors/destructor -------------------
 		VideoFile(filesystem::path initPath);
@@ -265,10 +256,5 @@ class VideoFile : public File
 		string fileType;
 		// -------------------------------------------
 };
-
-
-
-
-
 
 #endif 

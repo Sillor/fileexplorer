@@ -12,8 +12,7 @@ using namespace std;
 
 const string USERNAME = "admin";
 
-void setUp(Font& lightFont, Font& regularFont, TopMenu& topMenu, SideMenu& sideMenu, filesystem::path& currentDir, RenderWindow& window, View& mainView, RectangleShape& background)
-{
+void setUp(Font& lightFont, Font& regularFont, TopMenu& topMenu, SideMenu& sideMenu, filesystem::path& currentDir, RenderWindow& window, View& mainView, RectangleShape& background) {
 	lightFont.loadFromFile("fonts/Ubuntu-Light.ttf"); // light font for buttons
 	regularFont.loadFromFile("fonts/Ubuntu-Regular.ttf"); // light font for buttons
 	topMenu.setFont(regularFont);
@@ -22,8 +21,7 @@ void setUp(Font& lightFont, Font& regularFont, TopMenu& topMenu, SideMenu& sideM
 	background.setPosition(Vector2f(0.0, 0.0));
 }
 
-void registerClick(Directory& currentDisplayingDirectory, RenderWindow& window)
-{
+void registerClick(Directory& currentDisplayingDirectory, RenderWindow& window) {
 	int counter = 0;
 	for (auto element : currentDisplayingDirectory.getCoordinates()) {
 		Vector2i mousePos = Mouse::getPosition(window);
@@ -44,8 +42,7 @@ void registerClick(Directory& currentDisplayingDirectory, RenderWindow& window)
 	}
 }
 
-void updateScreen(RenderWindow& window, Directory& currentDisplayingDirectory, RectangleShape& background, View& mainView, SideMenu& sideMenu, TopMenu& topMenu, bool& wait)
-{
+void updateScreen(RenderWindow& window, Directory& currentDisplayingDirectory, RectangleShape& background, View& mainView, SideMenu& sideMenu, TopMenu& topMenu, bool& wait) {
 	window.clear();
 	currentDisplayingDirectory.displayContents(window, background, mainView);
 	sideMenu.drawTo(window); // draw side menu
