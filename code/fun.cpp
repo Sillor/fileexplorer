@@ -287,7 +287,7 @@ void TextFile::openItem() const
 	system(command.c_str());
 }
 
-void Directory::populate()
+void Directory::populate() //
 {
 	for (const filesystem::directory_entry &file : filesystem::directory_iterator(getPath()))
 	{
